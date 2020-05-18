@@ -21,7 +21,8 @@ func New(ctx context.Context, url string) (*Store, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Store{
+	store := &Store{
 		Client: client,
-	}, nil
+	}
+	return store, nil
 }
