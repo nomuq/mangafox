@@ -17,4 +17,13 @@ type Manga struct {
 	StartDate    string               `json:"startDate" bson:"startDate,omitempty"`
 	EndDate      string               `json:"endDate" bson:"endDate,omitempty"`
 	Chapters     []primitive.ObjectID `json:"chapters" bson:"chapters,omitempty"`
+	Links        Links                `json:"links" bson:"links,omitempty"`
+}
+
+type Links struct {
+	Anilist     string `json:"anilist"  bson:"anilist,omitempty"`
+	MAL         string `json:"mal" bson:"mal,omitempty"`
+	Mangadex    string `json:"mangadex" bson:"mangadex,omitempty"`
+	Mangareader string `json:"mangareader" bson:"mangareader,omitempty"`
+	Mangatown   string `json:"mangatown" bson:"mangatown,omitempty"`
 }

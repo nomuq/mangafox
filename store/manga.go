@@ -7,7 +7,20 @@ import (
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
+
+func (store *Store) MangaCollection() *mongo.Collection {
+	return store.Client.Database("mangafox").Collection("manga")
+}
+
+func (store *Store) GetMangaByMangareaderID(slug string) (model.Manga, error) {
+	var result model.Manga
+	filter := bson.D{primitive.E{Key: "links.mangareader", Value: slug}}
+	err := store.MangaCollection().FindOne(context.TODO(), filter).Decode(&result)
+	return result, err
+}
 
 func (store *Store) CreateManga(manga model.Manga) (model.Manga, error) {
 	return manga, nil
