@@ -1,29 +1,47 @@
 package model
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type Manga struct {
 	ID           primitive.ObjectID   `json:"id" bson:"_id,omitempty"`
-	CreatedAt    string               `json:"createdAt" bson:"createdAt,omitempty"`
-	UpdatedAt    string               `json:"updatedAt" bson:"updatedAt,omitempty"`
-	Title        string               `json:"title" bson:"title,omitempty"`
-	Description  string               `json:"description" bson:"description,omitempty"`
-	Genres       []string             `json:"genres" bson:"genres,omitempty"`
-	Tags         []string             `json:"tags" bson:"tags,omitempty"`
-	Synonyms     []string             `json:"synonyms" bson:"synonyms,omitempty"`
-	Type         string               `json:"type" bson:"type,omitempty"`
-	Banner       string               `json:"banner" bson:"banner,omitempty"`
-	IsPublishing bool                 `json:"isPublishing" bson:"isPublishing,omitempty"`
-	StartDate    string               `json:"startDate" bson:"startDate,omitempty"`
-	EndDate      string               `json:"endDate" bson:"endDate,omitempty"`
-	Chapters     []primitive.ObjectID `json:"chapters" bson:"chapters,omitempty"`
-	Links        Links                `json:"links" bson:"links,omitempty"`
+	CreatedAt    time.Time            `json:"createdAt" bson:"createdAt"`
+	UpdatedAt    time.Time            `json:"updatedAt" bson:"updatedAt"`
+	Title        string               `json:"title" bson:"title"`
+	Description  string               `json:"description" bson:"description"`
+	Genres       []string             `json:"genres" bson:"genres"`
+	Tags         []string             `json:"tags" bson:"tags"`
+	Synonyms     []string             `json:"synonyms" bson:"synonyms"`
+	Type         string               `json:"type" bson:"type"`
+	Banner       *string              `json:"banner" bson:"banner"`
+	IsPublishing bool                 `json:"isPublishing" bson:"isPublishing"`
+	StartDate    Date                 `json:"startDate" bson:"startDate"`
+	EndDate      Date                 `json:"endDate" bson:"endDate"`
+	Chapters     []primitive.ObjectID `json:"chapters" bson:"chapters"`
+	Links        Links                `json:"links" bson:"links"`
+	Cover        Cover                `json:"cover" bson:"cover"`
 }
 
 type Links struct {
-	Anilist     string `json:"anilist"  bson:"anilist,omitempty"`
-	MAL         string `json:"mal" bson:"mal,omitempty"`
-	Mangadex    string `json:"mangadex" bson:"mangadex,omitempty"`
-	Mangareader string `json:"mangareader" bson:"mangareader,omitempty"`
-	Mangatown   string `json:"mangatown" bson:"mangatown,omitempty"`
+	Anilist     *string `json:"anilist"  bson:"anilist"`
+	MAL         *string `json:"mal" bson:"mal"`
+	Mangadex    *string `json:"mangadex" bson:"mangadex"`
+	Mangareader *string `json:"mangareader" bson:"mangareader"`
+	Mangatown   *string `json:"mangatown" bson:"mangatown"`
+}
+
+type Cover struct {
+	ExtraLarge *string `json:"extraLarge"`
+	Large      *string `json:"large"`
+	Medium     *string `json:"medium"`
+	Color      *string `json:"color"`
+}
+
+type Date struct {
+	Year  *int `json:"year"`
+	Month *int `json:"month"`
+	Day   *int `json:"day"`
 }

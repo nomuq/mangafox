@@ -1,14 +1,19 @@
 package model
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type Chapter struct {
 	ID        primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-	CreatedAt string             `json:"createdAt" bson:"createdAt,omitempty"`
-	UpdatedAt string             `json:"updatedAt" bson:"updatedAt,omitempty"`
-	Title     string             `json:"title" bson:"title,omitempty"`
-	Number    int32              `json:"number" bson:"number,omitempty"`
-	Links     []string           `json:"links" bson:"links,omitempty"`
-	Source    string             `json:"source" bson:"source,omitempty"`
-	Language  string             `json:"language" bson:"language,omitempty"`
+	CreatedAt time.Time          `json:"createdAt" bson:"createdAt"`
+	UpdatedAt time.Time          `json:"updatedAt" bson:"updatedAt"`
+	Title     *string            `json:"title" bson:"title"`
+	Number    int64              `json:"number" bson:"number"`
+	Links     []string           `json:"links" bson:"links"`
+	Source    string             `json:"source" bson:"source"`
+	Language  string             `json:"language" bson:"language"`
+	Manga     primitive.ObjectID `json:"manga" bson:"manga"`
 }
