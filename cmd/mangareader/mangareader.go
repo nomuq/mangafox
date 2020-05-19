@@ -27,6 +27,12 @@ func main() {
 	}
 	defer str.Client.Disconnect(ctx)
 
+	SyncLatestChapters(str)
+
+	str.Client.Disconnect(ctx)
+}
+
+func SyncLatestChapters(str *store.Store) {
 	mr := new(mangareader.Mangareader)
 	chapters, err := mr.Latest()
 	if err != nil {
@@ -90,25 +96,40 @@ func main() {
 						},
 						Chapters: emptyChepters,
 					}
-					insertResult, err := str.CreateManga(record)
+
+					_, err := str.CreateManga(record)
 					if err != nil {
 						logrus.Error(err)
 						return
 					}
-					fmt.Println(insertResult.InsertedID)
+
+					result, err := str.GetMangaByMangareaderID(slug)
+					if err != nil {
+						logrus.Error(err)
+						return
+					}
+					IndexMangareaderChepter(str, chapterNumber, result)
 				} else {
-					fmt.Println("need to index", slug)
+					record := model.Mapping{
+						CreatedAt: time.Now(),
+						UpdatedAt: time.Now(),
+						Language:  "en",
+						Source:    "mangareader",
+						Slug:      slug,
+					}
+					_, err := str.CreateMapping(record)
+					if err != nil {
+						logrus.Error(err)
+					}
 				}
 
 			} else {
-				fmt.Println(slug, chapterNumber, result.ID)
 				IndexMangareaderChepter(str, chapterNumber, result)
 			}
 
 		}
 	}
 
-	str.Client.Disconnect(ctx)
 }
 
 func FindFromMAL(title string) (manga.Result, error) {
@@ -127,6 +148,7 @@ func FindFromMAL(title string) (manga.Result, error) {
 }
 
 func IndexMangareaderChepter(str *store.Store, chepter string, record model.Manga) {
+	logrus.Infoln(record.Title, chepter)
 
 	URL := fmt.Sprintf("https://www.mangareader.net/%s/%s/", *record.Links.Mangareader, chepter)
 	SOURCE := "www.mangareader.net"

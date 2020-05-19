@@ -32,6 +32,10 @@ func (store *Store) ChapterCollection() *mongo.Collection {
 	return store.Client.Database("mangafox").Collection("chapter")
 }
 
+func (store *Store) MappingsCollection() *mongo.Collection {
+	return store.Client.Database("mangafox").Collection("mapping")
+}
+
 func (store *Store) GetMangaByMangareaderID(slug string) (model.Manga, error) {
 	var result model.Manga
 	filter := bson.D{primitive.E{Key: "links.mangareader", Value: slug}}
@@ -45,12 +49,6 @@ func (store *Store) CreateManga(manga model.Manga) (*mongo.InsertOneResult, erro
 }
 
 func (store *Store) CreateChapter(manga model.Manga, chapter model.Chapter) (*mongo.InsertOneResult, error) {
-	// mangaCollection := str.MangaCollection()
-	// chapterCollection := str.ChapterCollection()
-
-	// opts := options.Update().SetUpsert(true)
-	// filter := bson.D{{"manga", manga.ID}}
-
 	filter := bson.M{
 		"$and": []bson.M{
 			bson.M{"language": "en"},
@@ -63,7 +61,6 @@ func (store *Store) CreateChapter(manga model.Manga, chapter model.Chapter) (*mo
 	// store.ChapterCollection().UpdateOne()
 	var r model.Chapter
 	err := store.ChapterCollection().FindOne(store.ctx, filter).Decode(&r)
-	fmt.Println(r.Manga)
 
 	if err != nil {
 		result, err := store.ChapterCollection().InsertOne(store.ctx, chapter)
@@ -71,10 +68,6 @@ func (store *Store) CreateChapter(manga model.Manga, chapter model.Chapter) (*mo
 	}
 
 	return nil, err
-
-	// InsertedID := fmt.Sprintf("%v", result.InsertedID)
-	// fmt.Println(InsertedID)
-
 }
 
 func (store *Store) GetAllManga() ([]model.Manga, error) {
@@ -95,4 +88,16 @@ func (store *Store) GetAllManga() ([]model.Manga, error) {
 	fmt.Println(mangas)
 
 	return mangas, nil
+}
+
+func (store *Store) CreateMapping(mapping model.Mapping) (*mongo.UpdateResult, error) {
+	filter := bson.M{
+		"$and": []bson.M{
+			{"language": mapping.Language},
+			{"slug": mapping.Slug},
+			{"source": mapping.Source},
+		},
+	}
+	result, err := store.MappingsCollection().UpdateOne(store.ctx, filter, bson.M{"$set": mapping})
+	return result, err
 }
