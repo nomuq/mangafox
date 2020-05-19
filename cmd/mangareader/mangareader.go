@@ -19,7 +19,8 @@ import (
 )
 
 func main() {
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Minute)
+	// ctx, _ := context.WithTimeout(context.Background(), 30*time.Minute)
+	ctx := context.Background()
 	str, err := store.New(ctx, "mongodb://localhost:27017")
 	if err != nil {
 		logrus.Panic(err)
@@ -49,9 +50,6 @@ func main() {
 					for _, tag := range anilistResult.Tags {
 						Tags = append(Tags, *tag.Name)
 					}
-
-					// startDate := time.Date(*anilistResult.StartDate.Year, time.Month(*anilistResult.StartDate.Month), *anilistResult.StartDate.Day, 0, 0, 0, 0, time.UTC)
-					// endDate := time.Date(*anilistResult.EndDate.Year, time.Month(*anilistResult.EndDate.Month), *anilistResult.EndDate.Day, 0, 0, 0, 0, time.UTC)
 
 					MALID := strconv.FormatInt(mal.MalID, 10)
 					AnilistID := strconv.FormatInt(anilistResult.ID, 10)

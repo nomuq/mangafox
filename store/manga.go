@@ -9,6 +9,21 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+func (store *Store) MangaIndexes() {
+	cursor, err := store.MangaCollection().Indexes().List(store.ctx)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	for cursor.Next(store.ctx) {
+		index := bson.D{}
+		cursor.Decode(&index)
+		fmt.Println(fmt.Sprintf("index found %v", index))
+	}
+
+}
+
 func (store *Store) MangaCollection() *mongo.Collection {
 	return store.Client.Database("mangafox").Collection("manga")
 }
@@ -36,13 +51,30 @@ func (store *Store) CreateChapter(manga model.Manga, chapter model.Chapter) (*mo
 	// opts := options.Update().SetUpsert(true)
 	// filter := bson.D{{"manga", manga.ID}}
 
-	// filter := bson.D{primitive.E{Key: "manga", Value: slug}}
+	filter := bson.M{
+		"$and": []bson.M{
+			bson.M{"language": "en"},
+			bson.M{"manga": manga.ID},
+			bson.M{"source": chapter.Source},
+			bson.M{"number": chapter.Number},
+		},
+	}
 
 	// store.ChapterCollection().UpdateOne()
+	var r model.Chapter
+	err := store.ChapterCollection().FindOne(store.ctx, filter).Decode(&r)
+	fmt.Println(r.Manga)
 
-	result, err := store.ChapterCollection().InsertOne(store.ctx, chapter)
+	if err != nil {
+		result, err := store.ChapterCollection().InsertOne(store.ctx, chapter)
+		return result, err
+	}
 
-	return result, err
+	return nil, err
+
+	// InsertedID := fmt.Sprintf("%v", result.InsertedID)
+	// fmt.Println(InsertedID)
+
 }
 
 func (store *Store) GetAllManga() ([]model.Manga, error) {
