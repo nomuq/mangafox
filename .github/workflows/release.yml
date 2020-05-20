@@ -32,17 +32,26 @@ jobs:
       run: |
         make  
         zip --junk-paths build README.md
-      
+   
+    - name: Get Time
+      id: time
+      uses: nanzm/get-time-action@v1.0
+      with:
+        timeZone: 8
+        format: 'YYYY-MM-DD-HH-mm-ss'
+
+    
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ date +%s }}
-        release_name: Release ${{ date +%s }}
+        tag_name: ${{ steps.time.outputs.time }}
+        release_name: Release ${{ steps.time.outputs.time }}
         draft: false
         prerelease: false
+    
     - name: Upload Release Asset
       id: upload-release-asset 
       uses: actions/upload-release-asset@v1
