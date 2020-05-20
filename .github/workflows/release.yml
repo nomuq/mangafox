@@ -30,7 +30,7 @@ jobs:
 
     - name: Build
       run: |
-        make builds 
+        make  
         zip --junk-paths build README.md
       
     - name: Create Release
