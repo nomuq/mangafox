@@ -7,6 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func (store *Store) MangaIndexes() {
@@ -21,7 +22,6 @@ func (store *Store) MangaIndexes() {
 		cursor.Decode(&index)
 		fmt.Println(fmt.Sprintf("index found %v", index))
 	}
-
 }
 
 func (store *Store) MangaCollection() *mongo.Collection {
@@ -91,6 +91,7 @@ func (store *Store) GetAllManga() ([]model.Manga, error) {
 }
 
 func (store *Store) CreateMapping(mapping model.Mapping) (*mongo.UpdateResult, error) {
+	opts := options.Update().SetUpsert(true)
 	filter := bson.M{
 		"$and": []bson.M{
 			{"language": mapping.Language},
@@ -98,6 +99,6 @@ func (store *Store) CreateMapping(mapping model.Mapping) (*mongo.UpdateResult, e
 			{"source": mapping.Source},
 		},
 	}
-	result, err := store.MappingsCollection().UpdateOne(store.ctx, filter, bson.M{"$set": mapping})
+	result, err := store.MappingsCollection().UpdateOne(store.ctx, filter, bson.M{"$set": mapping}, opts)
 	return result, err
 }
