@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"mangafox/model"
 	"mangafox/store"
+	"os"
 	"strconv"
 	"strings"
 	"sync"
@@ -17,10 +18,63 @@ import (
 	"github.com/nokusukun/jikan2go/manga"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+
+	"github.com/urfave/cli/v2"
 )
 
 func main() {
-	// ctx, _ := context.WithTimeout(context.Background(), 30*time.Minute)
+
+	app := &cli.App{
+		Name:  "Mangareader Indexer",
+		Usage: "cheptar indexer bot for mangareader",
+		Action: func(c *cli.Context) error {
+			logrus.Infoln("Indexing Latest Chapters")
+			IndexLatest()
+			return nil
+		},
+		Commands: []*cli.Command{
+			{
+				Name:    "latest",
+				Aliases: []string{"l"},
+				Usage:   "index latest mangareader cheptars",
+				Action: func(c *cli.Context) error {
+					logrus.Infoln("Indexing Latest Chapters")
+					IndexLatest()
+					return nil
+				},
+			},
+			{
+				Name:    "all",
+				Aliases: []string{"a"},
+				Usage:   "index all mangareader cheptars",
+				Action: func(c *cli.Context) error {
+					logrus.Infoln("Indexing All Chapters")
+					IndexAll()
+					return nil
+				},
+			},
+		},
+	}
+
+	err := app.Run(os.Args)
+	if err != nil {
+		logrus.Fatal(err)
+	}
+
+}
+
+func IndexAll() {
+	ctx := context.Background()
+	str, err := store.New(ctx, "mongodb://localhost:27017")
+	if err != nil {
+		logrus.Panic(err)
+	}
+	defer str.Client.Disconnect(ctx)
+
+	str.Client.Disconnect(ctx)
+}
+
+func IndexLatest() {
 	ctx := context.Background()
 	str, err := store.New(ctx, "mongodb://localhost:27017")
 	if err != nil {
