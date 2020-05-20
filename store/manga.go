@@ -1,6 +1,7 @@
 package store
 
 import (
+	"context"
 	"fmt"
 	"mangafox/model"
 
@@ -11,13 +12,13 @@ import (
 )
 
 func (store *Store) MangaIndexes() {
-	cursor, err := store.MangaCollection().Indexes().List(store.ctx)
+	cursor, err := store.MangaCollection().Indexes().List(context.TODO())
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	for cursor.Next(store.ctx) {
+	for cursor.Next(context.TODO()) {
 		index := bson.D{}
 		cursor.Decode(&index)
 		fmt.Println(fmt.Sprintf("index found %v", index))
@@ -39,12 +40,12 @@ func (store *Store) MappingsCollection() *mongo.Collection {
 func (store *Store) GetMangaByMangareaderID(slug string) (model.Manga, error) {
 	var result model.Manga
 	filter := bson.D{primitive.E{Key: "links.mangareader", Value: slug}}
-	err := store.MangaCollection().FindOne(store.ctx, filter).Decode(&result)
+	err := store.MangaCollection().FindOne(context.TODO(), filter).Decode(&result)
 	return result, err
 }
 
 func (store *Store) CreateManga(manga model.Manga) (*mongo.InsertOneResult, error) {
-	result, err := store.MangaCollection().InsertOne(store.ctx, manga)
+	result, err := store.MangaCollection().InsertOne(context.TODO(), manga)
 	return result, err
 }
 
@@ -60,10 +61,10 @@ func (store *Store) CreateChapter(manga model.Manga, chapter model.Chapter) (*mo
 
 	// store.ChapterCollection().UpdateOne()
 	var r model.Chapter
-	err := store.ChapterCollection().FindOne(store.ctx, filter).Decode(&r)
+	err := store.ChapterCollection().FindOne(context.TODO(), filter).Decode(&r)
 
 	if err != nil {
-		result, err := store.ChapterCollection().InsertOne(store.ctx, chapter)
+		result, err := store.ChapterCollection().InsertOne(context.TODO(), chapter)
 		return result, err
 	}
 
@@ -77,12 +78,12 @@ func (store *Store) GetAllManga() ([]model.Manga, error) {
 	// chapetrsCollection := database.Collection("chapters")
 
 	var mangas []model.Manga
-	cursor, err := mangaCollection.Find(store.ctx, bson.M{})
+	cursor, err := mangaCollection.Find(context.TODO(), bson.M{})
 	if err != nil {
 		return nil, err
 	}
 
-	if err = cursor.All(store.ctx, &mangas); err != nil {
+	if err = cursor.All(context.TODO(), &mangas); err != nil {
 		panic(err)
 	}
 	fmt.Println(mangas)
@@ -99,6 +100,6 @@ func (store *Store) CreateMapping(mapping model.Mapping) (*mongo.UpdateResult, e
 			{"source": mapping.Source},
 		},
 	}
-	result, err := store.MappingsCollection().UpdateOne(store.ctx, filter, bson.M{"$set": mapping}, opts)
+	result, err := store.MappingsCollection().UpdateOne(context.TODO(), filter, bson.M{"$set": mapping}, opts)
 	return result, err
 }

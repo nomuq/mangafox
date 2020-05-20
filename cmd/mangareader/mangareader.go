@@ -8,6 +8,7 @@ import (
 	"mangafox/store"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/gosimple/slug"
@@ -33,6 +34,8 @@ func main() {
 }
 
 func SyncLatestChapters(str *store.Store) {
+	var wg sync.WaitGroup
+
 	mr := new(mangareader.Mangareader)
 	chapters, err := mr.Latest()
 	if err != nil {
@@ -53,8 +56,15 @@ func SyncLatestChapters(str *store.Store) {
 					anilistResult, _ := anilist.GetByMAL(strconv.FormatInt(mal.MalID, 10))
 					var Tags []string
 
+					if anilistResult == nil {
+						logrus.Warnln("Cant Find ON Anilist", mal.MalID, mal.Title)
+						return
+					}
+
 					for _, tag := range anilistResult.Tags {
-						Tags = append(Tags, *tag.Name)
+						if tag.Name != nil {
+							Tags = append(Tags, *tag.Name)
+						}
 					}
 
 					MALID := strconv.FormatInt(mal.MalID, 10)
@@ -108,28 +118,22 @@ func SyncLatestChapters(str *store.Store) {
 						logrus.Error(err)
 						return
 					}
-					IndexMangareaderChepter(str, chapterNumber, result)
+					wg.Add(1)
+					go IndexMangareaderChepter(str, chapterNumber, result, &wg)
 				} else {
-					record := model.Mapping{
-						CreatedAt: time.Now(),
-						UpdatedAt: time.Now(),
-						Language:  "en",
-						Source:    "mangareader",
-						Slug:      slug,
-					}
-					_, err := str.CreateMapping(record)
-					if err != nil {
-						logrus.Error(err)
-					}
+					wg.Add(1)
+					go CreateMapping(str, slug, &wg)
 				}
 
 			} else {
-				IndexMangareaderChepter(str, chapterNumber, result)
+				wg.Add(1)
+				go IndexMangareaderChepter(str, chapterNumber, result, &wg)
 			}
 
 		}
 	}
 
+	wg.Wait()
 }
 
 func FindFromMAL(title string) (manga.Result, error) {
@@ -147,8 +151,9 @@ func FindFromMAL(title string) (manga.Result, error) {
 	return manga.Result{}, err
 }
 
-func IndexMangareaderChepter(str *store.Store, chepter string, record model.Manga) {
-	logrus.Infoln(record.Title, chepter)
+func IndexMangareaderChepter(str *store.Store, chepter string, record model.Manga, wg *sync.WaitGroup) {
+	defer wg.Done()
+	// logrus.Infoln(record.Title, chepter)
 
 	URL := fmt.Sprintf("https://www.mangareader.net/%s/%s/", *record.Links.Mangareader, chepter)
 	SOURCE := "www.mangareader.net"
@@ -179,5 +184,21 @@ func IndexMangareaderChepter(str *store.Store, chepter string, record model.Mang
 
 		str.CreateChapter(record, chapterRecord)
 	}
+	logrus.Infoln("INDEXED", record.Title, chepter)
 
+}
+
+func CreateMapping(str *store.Store, slug string, wg *sync.WaitGroup) {
+	defer wg.Done()
+	record := model.Mapping{
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+		Language:  "en",
+		Source:    "mangareader",
+		Slug:      slug,
+	}
+	_, err := str.CreateMapping(record)
+	if err != nil {
+		logrus.Error(err)
+	}
 }
