@@ -1,7 +1,6 @@
 package store
 
 import (
-	"context"
 	"mangafox/model"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -12,18 +11,18 @@ func (store *Store) MangaCollection() *mongo.Collection {
 }
 
 func (store *Store) CreateManga(manga model.Manga) (*mongo.InsertOneResult, error) {
-	result, err := store.MangaCollection().InsertOne(context.TODO(), manga)
+	result, err := store.MangaCollection().InsertOne(store.ctx, manga)
 	return result, err
 }
 
 // func (store *Store) MangaIndexes() {
-// 	cursor, err := store.MangaCollection().Indexes().List(context.TODO())
+// 	cursor, err := store.MangaCollection().Indexes().List(store.ctx)
 // 	if err != nil {
 // 		fmt.Println(err)
 // 		return
 // 	}
 
-// 	for cursor.Next(context.TODO()) {
+// 	for cursor.Next(store.ctx) {
 // 		index := bson.D{}
 // 		cursor.Decode(&index)
 // 		fmt.Println(fmt.Sprintf("index found %v", index))
@@ -37,12 +36,12 @@ func (store *Store) CreateManga(manga model.Manga) (*mongo.InsertOneResult, erro
 // 	// chapetrsCollection := database.Collection("chapters")
 
 // 	var mangas []model.Manga
-// 	cursor, err := mangaCollection.Find(context.TODO(), bson.M{})
+// 	cursor, err := mangaCollection.Find(store.ctx, bson.M{})
 // 	if err != nil {
 // 		return nil, err
 // 	}
 
-// 	if err = cursor.All(context.TODO(), &mangas); err != nil {
+// 	if err = cursor.All(store.ctx, &mangas); err != nil {
 // 		panic(err)
 // 	}
 // 	fmt.Println(mangas)

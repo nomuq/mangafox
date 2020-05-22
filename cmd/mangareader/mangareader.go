@@ -1,19 +1,17 @@
 package main
 
 import (
-	"fmt"
-	"html"
 	"mangafox/mangareader"
 	"os"
 
-	"net/http"
-	_ "net/http/pprof"
+	"github.com/pkg/profile"
 
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
 
 func main() {
+	defer profile.Start(profile.MemProfile).Stop()
 	var database string
 
 	app := cli.NewApp()
@@ -44,13 +42,6 @@ func main() {
 			Action: func(c *cli.Context) error {
 				logrus.Infoln("Indexing Latest Chapters")
 
-				http.HandleFunc("/all", func(w http.ResponseWriter, r *http.Request) {
-					mangareader.Sync(mangareader.Latest, database)
-					fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
-				})
-
-				http.ListenAndServe("localhost:8080", nil)
-
 				err := mangareader.Sync(mangareader.Latest, database)
 				return err
 			},
@@ -62,13 +53,6 @@ func main() {
 			Action: func(c *cli.Context) error {
 				logrus.Infoln("Indexing All Chapters")
 
-				http.HandleFunc("/all", func(w http.ResponseWriter, r *http.Request) {
-					mangareader.Sync(mangareader.All, database)
-					fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
-				})
-
-				http.ListenAndServe("localhost:8080", nil)
-
 				err := mangareader.Sync(mangareader.All, database)
 				return err
 			},
@@ -79,7 +63,6 @@ func main() {
 	if err != nil {
 		logrus.Fatal(err)
 	}
-
 }
 
 // func IndexAll() {

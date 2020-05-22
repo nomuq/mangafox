@@ -1,7 +1,6 @@
 package store
 
 import (
-	"context"
 	"mangafox/model"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -24,10 +23,10 @@ func (store *Store) CreateChapter(manga model.Manga, chapter model.Chapter) (*mo
 
 	// store.ChapterCollection().UpdateOne()
 	var r model.Chapter
-	err := store.ChapterCollection().FindOne(context.TODO(), filter).Decode(&r)
+	err := store.ChapterCollection().FindOne(store.ctx, filter).Decode(&r)
 
 	if err != nil {
-		result, err := store.ChapterCollection().InsertOne(context.TODO(), chapter)
+		result, err := store.ChapterCollection().InsertOne(store.ctx, chapter)
 		return result, err
 	}
 
