@@ -7,22 +7,22 @@ import (
 )
 
 type Manga struct {
-	ID           primitive.ObjectID   `json:"id" bson:"_id,omitempty"`
-	CreatedAt    time.Time            `json:"createdAt" bson:"createdAt"`
-	UpdatedAt    time.Time            `json:"updatedAt" bson:"updatedAt"`
-	Title        string               `json:"title" bson:"title"`
-	Description  string               `json:"description" bson:"description"`
-	Genres       []string             `json:"genres" bson:"genres"`
-	Tags         []string             `json:"tags" bson:"tags"`
-	Synonyms     []string             `json:"synonyms" bson:"synonyms"`
-	Type         string               `json:"type" bson:"type"`
-	Banner       *string              `json:"banner" bson:"banner"`
-	IsPublishing bool                 `json:"isPublishing" bson:"isPublishing"`
-	StartDate    Date                 `json:"startDate" bson:"startDate"`
-	EndDate      Date                 `json:"endDate" bson:"endDate"`
-	Chapters     []primitive.ObjectID `json:"chapters" bson:"chapters"`
-	Links        Links                `json:"links" bson:"links"`
-	Cover        Cover                `json:"cover" bson:"cover"`
+	ID           primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	CreatedAt    time.Time          `json:"createdAt" bson:"createdAt"`
+	UpdatedAt    time.Time          `json:"updatedAt" bson:"updatedAt"`
+	Title        string             `json:"title" bson:"title"`
+	Description  string             `json:"description" bson:"description"`
+	Genres       []string           `json:"genres" bson:"genres"`
+	Tags         []string           `json:"tags" bson:"tags"`
+	Synonyms     []string           `json:"synonyms" bson:"synonyms"`
+	Type         string             `json:"type" bson:"type"`
+	Banner       *string            `json:"banner" bson:"banner"`
+	IsPublishing bool               `json:"isPublishing" bson:"isPublishing"`
+	StartDate    Date               `json:"startDate" bson:"startDate"`
+	EndDate      Date               `json:"endDate" bson:"endDate"`
+	Links        Links              `json:"links" bson:"links"`
+	Cover        Cover              `json:"cover" bson:"cover"`
+	Chapters     []Chapter          `json:"chapters" bson:"-"`
 }
 
 type Links struct {
