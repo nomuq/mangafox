@@ -99,6 +99,8 @@ github.com/manga-community/mangareader v0.0.0-20200523045450-70398ebb8187 h1:KxB
 github.com/manga-community/mangareader v0.0.0-20200523045450-70398ebb8187/go.mod h1:ycRW6bYDtIPL21ZSN5O8zCVAFDTinWXCMiVbImWpmrM=
 github.com/manga-community/mangatown v0.0.0-20200518035941-d3ee4a48c7ec h1:inzNVVq87yto677nZMxNKTjJotji+d2lLZWA78oK2g8=
 github.com/manga-community/mangatown v0.0.0-20200518035941-d3ee4a48c7ec/go.mod h1:K+h8wfGK9Si3D5jQKCthTXXnYa67+0j+DuEo5Fv3AK8=
+github.com/manga-community/mangatown v0.0.0-20200523045432-68f3bc67dd28 h1:ubMKIrwjBh1jPmUFBcBmFgV3iV+RHLxZBl8/aZFiA4A=
+github.com/manga-community/mangatown v0.0.0-20200523045432-68f3bc67dd28/go.mod h1:K+h8wfGK9Si3D5jQKCthTXXnYa67+0j+DuEo5Fv3AK8=
 github.com/markbates/oncer v0.0.0-20181203154359-bf2de49a0be2/go.mod h1:Ld9puTsIW75CHf65OeIOkyKbteujpZVXDpWK6YGZbxE=
 github.com/markbates/safe v1.0.1/go.mod h1:nAqgmRi7cY2nqMc92/bSEeQA+R4OheNU2T1kNSCBdG0=
 github.com/mattn/go-colorable v0.1.2/go.mod h1:U0ppj6V5qS13XJ6of8GYAs25YV2eR4EVcfRqFIhoBtE=
