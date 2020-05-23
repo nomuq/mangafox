@@ -20,9 +20,10 @@ func main() {
 
 	app.Flags = []cli.Flag{
 		&cli.StringFlag{
-			Name:        "database",
+			Name:        "mongo, m",
 			Value:       "mongodb://localhost:27017",
-			Usage:       "mongo db url",
+			Usage:       "mongo db uri",
+			EnvVars:     []string{"MONGO_URI"},
 			Destination: &database,
 		},
 	}
