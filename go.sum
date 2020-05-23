@@ -92,6 +92,7 @@ github.com/labstack/gommon v0.3.0 h1:JEeO0bvc78PKdyHxloTKiF8BD5iGrH8T6MSeGvSgob0
 github.com/labstack/gommon v0.3.0/go.mod h1:MULnywXg0yavhxWKc+lOruYdAhDwPK9wf0OL7NoOu+k=
 github.com/manga-community/anilist v0.0.0-20200519074618-07e9471b116b h1:2NqlKqsu9l4ycatR0mYfeeBGgEDcB/V9MB/2StveuVA=
 github.com/manga-community/anilist v0.0.0-20200519074618-07e9471b116b/go.mod h1:etfayh0zgcs/JCr22T46/4oa5oqUzOQb7ReIID92eWQ=
+github.com/manga-community/anilist v0.0.0-20200523045536-5eacc76d049e/go.mod h1:etfayh0zgcs/JCr22T46/4oa5oqUzOQb7ReIID92eWQ=
 github.com/manga-community/mangareader v0.0.0-20200511115229-2db4a975cb35 h1:6C0cEnNcMwYnZLI7yTSDehe73AmuSAgrSvRKnuCp/XU=
 github.com/manga-community/mangareader v0.0.0-20200511115229-2db4a975cb35/go.mod h1:ycRW6bYDtIPL21ZSN5O8zCVAFDTinWXCMiVbImWpmrM=
 github.com/manga-community/mangareader v0.0.0-20200523045450-70398ebb8187 h1:KxBW7UmcJlqG5S3lWNorVGsFP1K6MEw7JaNdEyXgv9E=
