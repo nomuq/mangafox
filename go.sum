@@ -92,6 +92,8 @@ github.com/labstack/gommon v0.3.0 h1:JEeO0bvc78PKdyHxloTKiF8BD5iGrH8T6MSeGvSgob0
 github.com/labstack/gommon v0.3.0/go.mod h1:MULnywXg0yavhxWKc+lOruYdAhDwPK9wf0OL7NoOu+k=
 github.com/manga-community/anilist v0.0.0-20200523045536-5eacc76d049e h1:OhbioNoizv96GBQj3HzyvANTHaUQqqtEZfELs/gFAHw=
 github.com/manga-community/anilist v0.0.0-20200523045536-5eacc76d049e/go.mod h1:etfayh0zgcs/JCr22T46/4oa5oqUzOQb7ReIID92eWQ=
+github.com/manga-community/anilist v1.0.0 h1:euDvTyXJ2SDSru0o/yJBkBvwqMtW/cmHoFJJUdRAhtQ=
+github.com/manga-community/anilist v1.0.0/go.mod h1:etfayh0zgcs/JCr22T46/4oa5oqUzOQb7ReIID92eWQ=
 github.com/manga-community/mangareader v0.0.0-20200523045450-70398ebb8187 h1:KxBW7UmcJlqG5S3lWNorVGsFP1K6MEw7JaNdEyXgv9E=
 github.com/manga-community/mangareader v0.0.0-20200523045450-70398ebb8187/go.mod h1:ycRW6bYDtIPL21ZSN5O8zCVAFDTinWXCMiVbImWpmrM=
 github.com/manga-community/mangatown v0.0.0-20200523045432-68f3bc67dd28 h1:ubMKIrwjBh1jPmUFBcBmFgV3iV+RHLxZBl8/aZFiA4A=
