@@ -54,5 +54,5 @@ jobs:
           [ "$VERSION" == "master" ] && VERSION=latest
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
-          docker tag IMAGE_ID docker.pkg.github.com/manga-community/mangafox/IMAGE_NAME:VERSION
-          docker push docker.pkg.github.com/manga-community/mangafox/IMAGE_NAME:VERSION
+          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION
