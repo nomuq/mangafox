@@ -94,6 +94,8 @@ github.com/manga-community/anilist v0.0.0-20200519074618-07e9471b116b h1:2NqlKqs
 github.com/manga-community/anilist v0.0.0-20200519074618-07e9471b116b/go.mod h1:etfayh0zgcs/JCr22T46/4oa5oqUzOQb7ReIID92eWQ=
 github.com/manga-community/mangareader v0.0.0-20200511115229-2db4a975cb35 h1:6C0cEnNcMwYnZLI7yTSDehe73AmuSAgrSvRKnuCp/XU=
 github.com/manga-community/mangareader v0.0.0-20200511115229-2db4a975cb35/go.mod h1:ycRW6bYDtIPL21ZSN5O8zCVAFDTinWXCMiVbImWpmrM=
+github.com/manga-community/mangareader v0.0.0-20200523045450-70398ebb8187 h1:KxBW7UmcJlqG5S3lWNorVGsFP1K6MEw7JaNdEyXgv9E=
+github.com/manga-community/mangareader v0.0.0-20200523045450-70398ebb8187/go.mod h1:ycRW6bYDtIPL21ZSN5O8zCVAFDTinWXCMiVbImWpmrM=
 github.com/manga-community/mangatown v0.0.0-20200518035941-d3ee4a48c7ec h1:inzNVVq87yto677nZMxNKTjJotji+d2lLZWA78oK2g8=
 github.com/manga-community/mangatown v0.0.0-20200518035941-d3ee4a48c7ec/go.mod h1:K+h8wfGK9Si3D5jQKCthTXXnYa67+0j+DuEo5Fv3AK8=
 github.com/markbates/oncer v0.0.0-20181203154359-bf2de49a0be2/go.mod h1:Ld9puTsIW75CHf65OeIOkyKbteujpZVXDpWK6YGZbxE=
