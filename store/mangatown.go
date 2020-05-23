@@ -1,33 +1,32 @@
 package store
 
 import (
-	"fmt"
 	"mangafox/model"
+	"net/url"
 	"strconv"
 	"time"
 
-	"github.com/manga-community/mangareader"
+	"github.com/manga-community/mangatown"
 	"github.com/sirupsen/logrus"
-
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func (store *Store) GetMangaByMangareaderID(slug string) (model.Manga, error) {
+func (store *Store) GetMangaByMangatownID(slug string) (model.Manga, error) {
 	var result model.Manga
-	filter := bson.D{primitive.E{Key: "links.mangareader", Value: slug}}
+	filter := bson.D{primitive.E{Key: "links.mangatown", Value: slug}}
 	err := store.MangaCollection().FindOne(store.ctx, filter).Decode(&result)
 	return result, err
 }
 
-func (store *Store) UpdateMangareaderID(manga model.Manga, slug string) (*mongo.UpdateResult, error) {
+func (store *Store) UpdateMangatownID(manga model.Manga, slug string) (*mongo.UpdateResult, error) {
 	opts := options.Update().SetUpsert(true)
 	filter := bson.D{primitive.E{Key: "_id", Value: manga.ID}}
 	update := bson.D{primitive.E{Key: "$set",
 		Value: bson.D{
-			primitive.E{Key: "links.mangareader", Value: slug},
+			primitive.E{Key: "links.mangatown", Value: slug},
 		},
 	}}
 
@@ -35,33 +34,34 @@ func (store *Store) UpdateMangareaderID(manga model.Manga, slug string) (*mongo.
 	return result, err
 }
 
-func (store *Store) CreateMangareaderMapping(slug string) (*mongo.UpdateResult, error) {
+func (store *Store) CreateMangatownMapping(slug string) (*mongo.UpdateResult, error) {
 	record := model.Mapping{
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 		Language:  "en",
-		Source:    "mangareader",
+		Source:    "mangatown",
 		Slug:      slug,
 	}
 	result, err := store.CreateMapping(record)
 	return result, err
 }
 
-func (store *Store) CreateMangareaderChapter(issueNumber string, manga model.Manga) (*mongo.InsertOneResult, error) {
-	URL := fmt.Sprintf("https://www.mangareader.net/%s/%s/", *manga.Links.Mangareader, issueNumber)
-	SOURCE := "www.mangareader.net"
+func (store *Store) CreateMangatownChapter(mt *mangatown.Mangatown, issueNumber string, manga model.Manga, link string) (*mongo.InsertOneResult, error) {
 
-	mr := mangareader.Mangareader{}
-
-	comic := new(mangareader.Comic)
-	comic.Name = *manga.Links.Mangareader
-	comic.IssueNumber = issueNumber
-	comic.URLSource = URL
-	comic.Source = SOURCE
-
-	links, err := mr.RetrieveImageLinks(comic)
+	comic := new(mangatown.Comic)
+	comic.URLSource = link
+	err := mt.Initialize(comic)
 	if err != nil {
 		return nil, err
+	}
+	var Links []string
+
+	for _, item := range comic.Links {
+		u, err := url.Parse(item)
+		if err == nil {
+			resultURL := u.Scheme + "://" + u.Host + u.Path
+			Links = append(Links, resultURL)
+		}
 	}
 
 	number, err := strconv.ParseFloat(issueNumber, 64)
@@ -74,8 +74,8 @@ func (store *Store) CreateMangareaderChapter(issueNumber string, manga model.Man
 		UpdatedAt: time.Now(),
 		Language:  "en",
 		Number:    number,
-		Source:    "mangareader",
-		Links:     links,
+		Source:    "mangatown",
+		Links:     Links,
 		Manga:     manga.ID,
 	}
 

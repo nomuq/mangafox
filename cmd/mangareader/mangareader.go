@@ -56,6 +56,25 @@ func main() {
 				return err
 			},
 		},
+		{
+			Name:    "single",
+			Aliases: []string{"s"},
+			Usage:   "index single mangareader cheptars",
+			Flags: []cli.Flag{
+				&cli.StringFlag{
+					Name:     "manga",
+					Value:    "naruto",
+					Usage:    "manga title",
+					Required: true,
+				},
+			},
+			Action: func(c *cli.Context) error {
+				logrus.Infoln("Indexing Single Chapters")
+
+				err := mangareader.SyncManga("naruto", database)
+				return err
+			},
+		},
 	}
 
 	err := app.Run(os.Args)

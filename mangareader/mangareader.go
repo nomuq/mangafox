@@ -160,3 +160,29 @@ func IndexChapter(str *store.Store, mr *mangareader.Mangareader, chapter string)
 	}
 	return nil
 }
+
+func SyncManga(manga string, database string) error {
+	ctx := context.Background()
+	str, err := store.New(ctx, database)
+	if err != nil {
+		// logrus.Panic(err)
+		return err
+	}
+	defer str.Client.Disconnect(ctx)
+
+	mr := new(mangareader.Mangareader)
+	issues, err := mr.RetrieveIssueLinks("https://www.mangareader.net/"+manga, false, false)
+	if err != nil {
+		return err
+	}
+	for _, chapter := range issues {
+		err = IndexChapter(str, mr, chapter)
+		if err != nil {
+			logrus.Errorln(err)
+		}
+	}
+
+	str.Client.Disconnect(ctx)
+
+	return nil
+}
