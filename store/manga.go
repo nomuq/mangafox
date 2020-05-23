@@ -3,6 +3,8 @@ package store
 import (
 	"mangafox/model"
 
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -12,6 +14,13 @@ func (store *Store) MangaCollection() *mongo.Collection {
 
 func (store *Store) CreateManga(manga model.Manga) (*mongo.InsertOneResult, error) {
 	result, err := store.MangaCollection().InsertOne(store.ctx, manga)
+	return result, err
+}
+
+func (store *Store) GetMangaByMALID(slug string) (model.Manga, error) {
+	var result model.Manga
+	filter := bson.D{primitive.E{Key: "links.mal", Value: slug}}
+	err := store.MangaCollection().FindOne(store.ctx, filter).Decode(&result)
 	return result, err
 }
 

@@ -76,71 +76,87 @@ func IndexChapter(str *store.Store, mr *mangareader.Mangareader, chapter string)
 			}
 
 			if mal.MalID != 0 {
-				anilistResult, err := anilist.GetByMAL(strconv.FormatInt(mal.MalID, 10))
-				if err != nil {
-					return err
-				}
-
-				var Tags []string
-				if anilistResult == nil {
-					return fmt.Errorf("Cant Find ON Anilist %s %s", mal.MalID, mal.Title)
-				}
-
-				for _, tag := range anilistResult.Tags {
-					if tag.Name != nil {
-						Tags = append(Tags, *tag.Name)
-					}
-				}
-
 				MALID := strconv.FormatInt(mal.MalID, 10)
-				AnilistID := strconv.FormatInt(anilistResult.ID, 10)
 
-				record := model.Manga{
-					Title: mal.Title,
-					Type:  string(mal.Type),
+				// First check if same malid exist in the system?
+				r, err := str.GetMangaByMALID(MALID)
+				if err == nil {
+					if r.Links.Mangareader == nil {
+						_, err := str.UpdateMangareaderID(r, slug)
+						if err != nil {
+							return err
+						}
+					}
+					r.Links.Mangareader = &slug
+					str.CreateMangareaderChapter(chapterNumber, r)
+				} else {
+					anilistResult, err := anilist.GetByMAL(strconv.FormatInt(mal.MalID, 10))
+					if err != nil {
+						return err
+					}
 
-					Description:  mal.Synopsis,
-					IsPublishing: mal.Publishing,
-					Links: model.Links{
-						MAL:         &MALID,
-						Mangareader: &slug,
-						Anilist:     &AnilistID,
-					},
-					Genres:   anilistResult.Genres,
-					Tags:     Tags,
-					Synonyms: anilistResult.Synonyms,
-					Cover: model.Cover{
-						Color:      anilistResult.CoverImage.Color,
-						ExtraLarge: anilistResult.CoverImage.ExtraLarge,
-						Large:      anilistResult.CoverImage.Large,
-						Medium:     anilistResult.CoverImage.Medium,
-					},
-					CreatedAt: time.Now(),
-					UpdatedAt: time.Now(),
-					Banner:    anilistResult.BannerImage,
-					StartDate: model.Date{
-						Day:   anilistResult.StartDate.Day,
-						Month: anilistResult.StartDate.Month,
-						Year:  anilistResult.StartDate.Year,
-					},
-					EndDate: model.Date{
-						Day:   anilistResult.EndDate.Day,
-						Month: anilistResult.EndDate.Month,
-						Year:  anilistResult.EndDate.Year,
-					},
-					// Chapters: emptyChepters,
+					var Tags []string
+					if anilistResult == nil {
+						return fmt.Errorf("Cant Find ON Anilist %s %s", mal.MalID, mal.Title)
+					}
+
+					for _, tag := range anilistResult.Tags {
+						if tag.Name != nil {
+							Tags = append(Tags, *tag.Name)
+						}
+					}
+
+					// MALID := strconv.FormatInt(mal.MalID, 10)
+					AnilistID := strconv.FormatInt(anilistResult.ID, 10)
+
+					record := model.Manga{
+						Title: mal.Title,
+						Type:  string(mal.Type),
+
+						Description:  mal.Synopsis,
+						IsPublishing: mal.Publishing,
+						Links: model.Links{
+							MAL:         &MALID,
+							Mangareader: &slug,
+							Anilist:     &AnilistID,
+						},
+						Genres:   anilistResult.Genres,
+						Tags:     Tags,
+						Synonyms: anilistResult.Synonyms,
+						Cover: model.Cover{
+							Color:      anilistResult.CoverImage.Color,
+							ExtraLarge: anilistResult.CoverImage.ExtraLarge,
+							Large:      anilistResult.CoverImage.Large,
+							Medium:     anilistResult.CoverImage.Medium,
+						},
+						CreatedAt: time.Now(),
+						UpdatedAt: time.Now(),
+						Banner:    anilistResult.BannerImage,
+						StartDate: model.Date{
+							Day:   anilistResult.StartDate.Day,
+							Month: anilistResult.StartDate.Month,
+							Year:  anilistResult.StartDate.Year,
+						},
+						EndDate: model.Date{
+							Day:   anilistResult.EndDate.Day,
+							Month: anilistResult.EndDate.Month,
+							Year:  anilistResult.EndDate.Year,
+						},
+						// Chapters: emptyChepters,
+					}
+
+					_, err = str.CreateManga(record)
+					if err != nil {
+						return err
+					}
+
+					manga, err := str.GetMangaByMangareaderID(slug)
+					if err != nil {
+						return err
+					}
+					str.CreateMangareaderChapter(chapterNumber, manga)
 				}
 
-				_, err = str.CreateManga(record)
-				if err != nil {
-					return err
-				}
-
-				manga, err := str.GetMangaByMangareaderID(slug)
-				if err != nil {
-					return err
-				}
-				str.CreateMangareaderChapter(chapterNumber, manga)
 			} else {
 				str.CreateMangareaderMapping(slug)
 			}

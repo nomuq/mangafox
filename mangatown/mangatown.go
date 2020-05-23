@@ -2,7 +2,6 @@ package mangatown
 
 import (
 	"context"
-	"fmt"
 	"mangafox/mal"
 	"mangafox/model"
 	"mangafox/store"
@@ -77,73 +76,87 @@ func IndexChapter(str *store.Store, mt *mangatown.Mangatown, chapter string) err
 		}
 
 		if mal.MalID != 0 {
-			anilistResult, err := anilist.GetByMAL(strconv.FormatInt(mal.MalID, 10))
-			if err != nil {
-				str.CreateMangatownMapping(mtTitle)
-				// logrus.Errorln("Cant Find ON Anilist", mal.MalID, mal.Title, err)
-				return nil
-			}
-
-			var Tags []string
-			if anilistResult == nil {
-				str.CreateMangatownMapping(mtTitle)
-				return nil
-			}
-
-			for _, tag := range anilistResult.Tags {
-				if tag.Name != nil {
-					Tags = append(Tags, *tag.Name)
-				}
-			}
-
 			MALID := strconv.FormatInt(mal.MalID, 10)
-			AnilistID := strconv.FormatInt(anilistResult.ID, 10)
 
-			record := model.Manga{
-				Title: mal.Title,
-				Type:  string(mal.Type),
+			// First check if same malid exist in the system?
+			r, err := str.GetMangaByMALID(MALID)
+			if err == nil {
+				if r.Links.Mangatown == nil {
+					_, err := str.UpdateMangatownID(r, mtTitle)
+					if err != nil {
+						return err
+					}
+				}
+				str.CreateMangatownChapter(mt, issueNumber, r, chapter)
+			} else {
+				// else create record
+				anilistResult, err := anilist.GetByMAL(strconv.FormatInt(mal.MalID, 10))
+				if err != nil {
+					str.CreateMangatownMapping(mtTitle)
+					// logrus.Errorln("Cant Find ON Anilist", mal.MalID, mal.Title, err)
+					return nil
+				}
 
-				Description:  mal.Synopsis,
-				IsPublishing: mal.Publishing,
-				Links: model.Links{
-					MAL:       &MALID,
-					Mangatown: &mtTitle,
-					Anilist:   &AnilistID,
-				},
-				Genres:   anilistResult.Genres,
-				Tags:     Tags,
-				Synonyms: anilistResult.Synonyms,
-				Cover: model.Cover{
-					Color:      anilistResult.CoverImage.Color,
-					ExtraLarge: anilistResult.CoverImage.ExtraLarge,
-					Large:      anilistResult.CoverImage.Large,
-					Medium:     anilistResult.CoverImage.Medium,
-				},
-				CreatedAt: time.Now(),
-				UpdatedAt: time.Now(),
-				Banner:    anilistResult.BannerImage,
-				StartDate: model.Date{
-					Day:   anilistResult.StartDate.Day,
-					Month: anilistResult.StartDate.Month,
-					Year:  anilistResult.StartDate.Year,
-				},
-				EndDate: model.Date{
-					Day:   anilistResult.EndDate.Day,
-					Month: anilistResult.EndDate.Month,
-					Year:  anilistResult.EndDate.Year,
-				},
+				var Tags []string
+				if anilistResult == nil {
+					str.CreateMangatownMapping(mtTitle)
+					return nil
+				}
+
+				for _, tag := range anilistResult.Tags {
+					if tag.Name != nil {
+						Tags = append(Tags, *tag.Name)
+					}
+				}
+
+				AnilistID := strconv.FormatInt(anilistResult.ID, 10)
+
+				record := model.Manga{
+					Title: mal.Title,
+					Type:  string(mal.Type),
+
+					Description:  mal.Synopsis,
+					IsPublishing: mal.Publishing,
+					Links: model.Links{
+						MAL:       &MALID,
+						Mangatown: &mtTitle,
+						Anilist:   &AnilistID,
+					},
+					Genres:   anilistResult.Genres,
+					Tags:     Tags,
+					Synonyms: anilistResult.Synonyms,
+					Cover: model.Cover{
+						Color:      anilistResult.CoverImage.Color,
+						ExtraLarge: anilistResult.CoverImage.ExtraLarge,
+						Large:      anilistResult.CoverImage.Large,
+						Medium:     anilistResult.CoverImage.Medium,
+					},
+					CreatedAt: time.Now(),
+					UpdatedAt: time.Now(),
+					Banner:    anilistResult.BannerImage,
+					StartDate: model.Date{
+						Day:   anilistResult.StartDate.Day,
+						Month: anilistResult.StartDate.Month,
+						Year:  anilistResult.StartDate.Year,
+					},
+					EndDate: model.Date{
+						Day:   anilistResult.EndDate.Day,
+						Month: anilistResult.EndDate.Month,
+						Year:  anilistResult.EndDate.Year,
+					},
+				}
+
+				_, err = str.CreateManga(record)
+				if err != nil {
+					return err
+				}
+
+				manga, err := str.GetMangaByMangatownID(mtTitle)
+				if err != nil {
+					return err
+				}
+				str.CreateMangatownChapter(mt, issueNumber, manga, chapter)
 			}
-
-			_, err = str.CreateManga(record)
-			if err != nil {
-				return err
-			}
-
-			manga, err := str.GetMangaByMangatownID(mtTitle)
-			if err != nil {
-				return err
-			}
-			str.CreateMangatownChapter(mt, issueNumber, manga, chapter)
 
 		} else {
 			str.CreateMangatownMapping(mtTitle)
@@ -178,11 +191,10 @@ func SyncManga(manga string, database string) error {
 		return err
 	}
 	for _, chapter := range issues {
-		fmt.Println(chapter)
-		// err = IndexChapter(str, mt, chapter)
-		// if err != nil {
-		// 	logrus.Errorln(err)
-		// }
+		err = IndexChapter(str, mt, chapter)
+		if err != nil {
+			logrus.Errorln(err)
+		}
 	}
 
 	str.Client.Disconnect(ctx)
