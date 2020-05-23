@@ -33,23 +33,23 @@ jobs:
           go build -o build/mangafox-server ./cmd/server
           zip --junk-paths build README.md
 
-      - name: Get Time
-        id: time
-        uses: nanzm/get-time-action@v1.0
-        with:
-          timeZone: 8
-          format: "YYYY-MM-DD-HH-mm-ss"
+      # - name: Get Time
+      #   id: time
+      #   uses: nanzm/get-time-action@v1.0
+      #   with:
+      #     timeZone: 8
+      #     format: "YYYY-MM-DD-HH-mm-ss"
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.time.outputs.time }}
-          release_name: Release ${{ steps.time.outputs.time }}
-          draft: false
-          prerelease: false
+      # - name: Create Release
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ steps.time.outputs.time }}
+      #     release_name: Release ${{ steps.time.outputs.time }}
+      #     draft: false
+      #     prerelease: false
 
       - name: Upload Release Indexer
         id: upload-release-indexer
