@@ -12,12 +12,26 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func (store *Store) GetMangaByMangareaderID(slug string) (model.Manga, error) {
 	var result model.Manga
 	filter := bson.D{primitive.E{Key: "links.mangareader", Value: slug}}
 	err := store.MangaCollection().FindOne(store.ctx, filter).Decode(&result)
+	return result, err
+}
+
+func (store *Store) UpdateMangareaderID(manga model.Manga, slug string) (*mongo.UpdateResult, error) {
+	opts := options.Update().SetUpsert(true)
+	filter := bson.D{primitive.E{Key: "_id", Value: manga.ID}}
+	update := bson.D{primitive.E{Key: "$set",
+		Value: bson.D{
+			primitive.E{Key: "links.mangareader", Value: slug},
+		},
+	}}
+
+	result, err := store.MangaCollection().UpdateOne(store.ctx, filter, update, opts)
 	return result, err
 }
 

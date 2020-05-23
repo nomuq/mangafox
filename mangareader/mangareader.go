@@ -146,6 +146,12 @@ func IndexChapter(str *store.Store, mr *mangareader.Mangareader, chapter string)
 			}
 
 		} else {
+			if result.Links.Mangareader == nil {
+				_, err := str.UpdateMangareaderID(result, slug)
+				if err != nil {
+					return err
+				}
+			}
 			str.CreateMangareaderChapter(chapterNumber, result)
 		}
 
