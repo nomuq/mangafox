@@ -38,22 +38,17 @@ func (store *Store) GetMangaByMALID(slug string) (model.Manga, error) {
 // 	}
 // }
 
-// func (store *Store) GetAllManga() ([]model.Manga, error) {
+func (store *Store) GetAllManga() ([]model.Manga, error) {
 
-// 	database := store.Client.Database("mangafox")
-// 	mangaCollection := database.Collection("manga")
-// 	// chapetrsCollection := database.Collection("chapters")
+	var mangas []model.Manga
+	cursor, err := store.MangaCollection().Find(store.ctx, bson.M{})
+	if err != nil {
+		return nil, err
+	}
 
-// 	var mangas []model.Manga
-// 	cursor, err := mangaCollection.Find(store.ctx, bson.M{})
-// 	if err != nil {
-// 		return nil, err
-// 	}
+	if err = cursor.All(store.ctx, &mangas); err != nil {
+		return nil, err
+	}
 
-// 	if err = cursor.All(store.ctx, &mangas); err != nil {
-// 		panic(err)
-// 	}
-// 	fmt.Println(mangas)
-
-// 	return mangas, nil
-// }
+	return mangas, nil
+}

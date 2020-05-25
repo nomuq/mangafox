@@ -142,6 +142,12 @@ func IndexChapter(str *store.Store, mr *mangareader.Mangareader, chapter string)
 							Month: anilistResult.EndDate.Month,
 							Year:  anilistResult.EndDate.Year,
 						},
+						AlternateTitle: model.AlternateTitle{
+							English: anilistResult.Title.English,
+							Native:  anilistResult.Title.Native,
+							Romaji:  anilistResult.Title.Romaji,
+						},
+						Country: anilistResult.CountryOfOrigin,
 						// Chapters: emptyChepters,
 					}
 

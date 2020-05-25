@@ -144,6 +144,12 @@ func IndexChapter(str *store.Store, mt *mangatown.Mangatown, chapter string) err
 						Month: anilistResult.EndDate.Month,
 						Year:  anilistResult.EndDate.Year,
 					},
+					AlternateTitle: model.AlternateTitle{
+						English: anilistResult.Title.English,
+						Native:  anilistResult.Title.Native,
+						Romaji:  anilistResult.Title.Romaji,
+					},
+					Country: anilistResult.CountryOfOrigin,
 				}
 
 				_, err = str.CreateManga(record)

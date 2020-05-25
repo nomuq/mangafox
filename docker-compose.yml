@@ -1,7 +1,7 @@
 version: "3"
 services:
   mangareader-indexer:
-    image: docker.pkg.github.com/manga-community/mangafox/mangafox:0.1.1
+    image: docker.pkg.github.com/manga-community/mangafox/mangafox:0.1.2
     entrypoint: ["/mangafox/mangareader-indexer"]
     environment:
       MONGO_URI: mongodb://mangafox:mangafox@mongo

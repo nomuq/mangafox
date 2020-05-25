@@ -3,6 +3,7 @@ module mangafox
 go 1.13
 
 require (
+	github.com/bake/mangadex v0.0.0-20200308152818-cb733691b670
 	github.com/gosimple/slug v1.9.0
 	github.com/labstack/echo/v4 v4.1.16
 	github.com/manga-community/anilist v1.0.0

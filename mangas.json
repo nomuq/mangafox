@@ -1,0 +1,35 @@
+[
+  {
+    "title": "Naruto",
+    "description": "Whenever Naruto Uzumaki proclaims that he will someday become the Hokage—a title bestowed upon the best ninja in the Village Hidden in the Leaves—no one takes him seriously. Since birth, Naruto has be...",
+    "genres": ["Action", "Adventure"],
+    "tags": [
+      "Ninja",
+      "Shounen",
+      "Super Power",
+      "Male Protagonist",
+      "Time Skip",
+      "Love Triangle"
+    ],
+    "synonyms": [],
+    "type": "Manga",
+    "banner": "https://s4.anilist.co/file/anilistcdn/media/manga/banner/30011-pkX1O0EFqvV7.jpg",
+    "isPublishing": false,
+    "startDate": { "year": 1999, "month": 9, "day": 21 },
+    "endDate": { "year": 2014, "month": 11, "day": 10 },
+    "links": {
+      "anilist": "30011",
+      "mal": "11",
+      "mangadex": null,
+      "mangareader": null,
+      "mangatown": "naruto"
+    },
+    "cover": {
+      "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/nx30011-9yUF1dXWgDOx.jpg",
+      "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/nx30011-9yUF1dXWgDOx.jpg",
+      "medium": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/small/nx30011-9yUF1dXWgDOx.jpg",
+      "color": "#fe7828"
+    },
+    "chapters": null
+  }
+]
