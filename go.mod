@@ -19,6 +19,7 @@ require (
 	github.com/robfig/cron v1.2.0 // indirect
 	github.com/satishbabariya/ratelimit v0.0.3
 	github.com/sirupsen/logrus v1.6.0
+	github.com/stretchr/objx v0.1.1 // indirect
 	github.com/urfave/cli/v2 v2.2.0
 	go.mongodb.org/mongo-driver v1.3.3
 	golang.org/x/crypto v0.0.0-20200510223506-06a226fb4e37 // indirect

@@ -26,11 +26,13 @@ FROM dkron/dkron AS cron-builder
 
 FROM alpine
 
-COPY --from=cron-builder  /opt/local/dkron/ /
+WORKDIR /mangafox
 
-COPY --from=builder /mangafox/mangafox-server /mangafox-server 
-COPY --from=builder /mangafox/mangareader-indexer /mangareader-indexer 
-COPY --from=builder /mangafox/mangatown-indexer /mangatown-indexer 
-COPY --from=builder /mangafox/mangadex-indexer /mangadex-indexer 
+COPY --from=cron-builder  /opt/local/dkron/ /mangafox
 
-ENTRYPOINT [ "dkron" ]
+COPY --from=builder /mangafox/mangafox-server /mangafox/mangafox-server 
+COPY --from=builder /mangafox/mangareader-indexer /mangafox/mangareader-indexer 
+COPY --from=builder /mangafox/mangatown-indexer /mangafox/mangatown-indexer 
+COPY --from=builder /mangafox/mangadex-indexer /mangafox/mangadex-indexer 
+
+CMD ["/mangafox/dkron"]

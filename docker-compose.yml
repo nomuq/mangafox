@@ -9,6 +9,29 @@ services:
     environment:
       - GODEBUG=netdns=go
       - MONGO_URI=mongodb://mangafox:mangafox@mongo
+    command: /mangafox/dkron agent --server --log-level=debug --bootstrap-expect=1
+    depends_on:
+      - mongo
+
+  dkron-server:
+    build: .
+    ports:
+      - "8080"
+      - "8946"
+      - "6868"
+    environment:
+      - GODEBUG=netdns=go
+    command: /mangafox/dkron agent --server --retry-join=dkron:8946 --log-level=debug --bootstrap-expect=3
+    depends_on:
+      - mongo
+  dkron-agent:
+    build: .
+    ports:
+      - "8946"
+      - "6868"
+    environment:
+      - GODEBUG=netdns=go
+    command: /mangafox/dkron agent --retry-join=dkron:8946 --log-level=debug
     depends_on:
       - mongo
 
