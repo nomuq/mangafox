@@ -21,12 +21,16 @@ RUN go build -o mangatown-indexer ./cmd/mangatown
 RUN go build -o mangadex-indexer ./cmd/mangadex
 
 
-FROM dkron/dkron
+FROM dkron/dkron AS cron-builder 
 
+
+FROM alpine
+
+COPY --from=cron-builder  /opt/local/dkron/ /
 
 COPY --from=builder /mangafox/mangafox-server /mangafox-server 
 COPY --from=builder /mangafox/mangareader-indexer /mangareader-indexer 
 COPY --from=builder /mangafox/mangatown-indexer /mangatown-indexer 
 COPY --from=builder /mangafox/mangadex-indexer /mangadex-indexer 
 
-CMD ["dkron"]
+ENTRYPOINT [ "dkron" ]
