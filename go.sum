@@ -121,6 +121,8 @@ github.com/manga-community/anilist v1.0.0 h1:euDvTyXJ2SDSru0o/yJBkBvwqMtW/cmHoFJ
 github.com/manga-community/anilist v1.0.0/go.mod h1:etfayh0zgcs/JCr22T46/4oa5oqUzOQb7ReIID92eWQ=
 github.com/manga-community/mangadex v0.1.1 h1:cCoXXMEHvFP/BFov9iaWBdjlE2vy4HrWLbPamCvzgco=
 github.com/manga-community/mangadex v0.1.1/go.mod h1:354Ws5SQ0lLbRaQzq/t//JN6prH5FJIk8jzZt/lthAM=
+github.com/manga-community/mangadex v0.1.2 h1:XNbabZWov/ka4w5HuWb+5p7UfnHdpyFy5/VOyPECPpo=
+github.com/manga-community/mangadex v0.1.2/go.mod h1:jEzK3rHFNmrhMaFBnCTtaON/8N+pUX7HU845MT8f2j8=
 github.com/manga-community/mangareader v1.0.0 h1:32+XJ4xTpLA/pMz8SIQ3i68LXpu1vMbhgaztUnebFbo=
 github.com/manga-community/mangareader v1.0.0/go.mod h1:ycRW6bYDtIPL21ZSN5O8zCVAFDTinWXCMiVbImWpmrM=
 github.com/manga-community/mangatown v1.0.0 h1:ZmwSwKzYr/jUH87WORh6IZYS3JZi9tzpnJV8leGJen4=
