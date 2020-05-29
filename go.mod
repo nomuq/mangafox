@@ -7,7 +7,7 @@ require (
 	github.com/go-redis/redis_rate/v8 v8.0.0
 	github.com/golang/protobuf v1.3.3 // indirect
 	github.com/gosimple/slug v1.9.0
-	github.com/hibiken/asynq v0.9.0
+	github.com/hibiken/asynq v0.9.1
 	github.com/labstack/echo/v4 v4.1.16
 	github.com/manga-community/anilist v1.0.0
 	github.com/manga-community/mangadex v0.1.2
