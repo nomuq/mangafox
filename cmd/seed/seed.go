@@ -1,4 +1,13 @@
-// package main
+package main
+
+import (
+	"context"
+	"mangafox/store"
+
+	"github.com/sirupsen/logrus"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+)
 
 // import (
 // 	"context"
@@ -146,3 +155,57 @@
 // 	Ph LangCode = "ph"
 // 	Ru LangCode = "ru"
 // )
+
+func main() {
+	ctx := context.Background()
+	str, err := store.New(ctx, "mongodb://localhost:27017")
+	if err != nil {
+		logrus.Fatalln(err)
+	}
+	CreateIndexes(ctx, str)
+	ctx.Done()
+}
+
+func CreateIndexes(ctx context.Context, store *store.Store) {
+
+	collection := store.MangaCollection()
+
+	indexes := []mongo.IndexModel{
+		mongo.IndexModel{
+			Keys: bson.M{
+				"links.anilist": 1,
+			},
+		},
+		mongo.IndexModel{
+			Keys: bson.M{
+				"links.mal": 1,
+			},
+		},
+		mongo.IndexModel{
+			Keys: bson.M{
+				"links.mangadex": 1,
+			},
+		},
+		mongo.IndexModel{
+			Keys: bson.M{
+				"links.mangareader": 1,
+			},
+		},
+		mongo.IndexModel{
+			Keys: bson.M{
+				"links.mangatown": 1,
+			},
+		},
+		mongo.IndexModel{
+			Keys: bson.M{
+				"isPublishing": 1,
+			},
+		},
+	}
+
+	res, err := collection.Indexes().CreateMany(ctx, indexes)
+	if err != nil {
+		logrus.Fatalln(err)
+	}
+	logrus.Infoln(res)
+}

@@ -2,8 +2,8 @@ package mangatown
 
 import (
 	"context"
-	"mangafox/mal"
 	"mangafox/model"
+	"mangafox/service"
 	"mangafox/store"
 	"strconv"
 	"strings"
@@ -69,7 +69,7 @@ func IndexChapter(str *store.Store, mt *mangatown.Mangatown, chapter string) err
 
 	result, err := str.GetMangaByMangatownID(mtTitle)
 	if err != nil {
-		mal, err := mal.FindFromMAL(malSlug)
+		mal, err := service.FindFromMAL(malSlug)
 		if err != nil {
 			logrus.Errorln("MAL ERROR", mtTitle)
 			return err

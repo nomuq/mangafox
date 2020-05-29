@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"mangafox/mal"
 	"mangafox/model"
+	"mangafox/service"
 	"mangafox/store"
 	"strconv"
 	"time"
@@ -70,7 +70,7 @@ func IndexChapter(str *store.Store, mr *mangareader.Mangareader, chapter string)
 
 		result, err := str.GetMangaByMangareaderID(slug)
 		if err != nil {
-			mal, err := mal.FindFromMAL(slug)
+			mal, err := service.FindFromMAL(slug)
 			if err != nil {
 				return err
 			}

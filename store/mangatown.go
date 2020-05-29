@@ -17,7 +17,7 @@ import (
 func (store *Store) GetMangaByMangatownID(slug string) (model.Manga, error) {
 	var result model.Manga
 	filter := bson.D{primitive.E{Key: "links.mangatown", Value: slug}}
-	err := store.MangaCollection().FindOne(store.ctx, filter).Decode(&result)
+	err := store.MangaCollection().FindOne(store.Context, filter).Decode(&result)
 	return result, err
 }
 
@@ -30,7 +30,7 @@ func (store *Store) UpdateMangatownID(manga model.Manga, slug string) (*mongo.Up
 		},
 	}}
 
-	result, err := store.MangaCollection().UpdateOne(store.ctx, filter, update, opts)
+	result, err := store.MangaCollection().UpdateOne(store.Context, filter, update, opts)
 	return result, err
 }
 

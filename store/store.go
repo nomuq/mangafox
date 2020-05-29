@@ -9,8 +9,8 @@ import (
 )
 
 type Store struct {
-	Client *mongo.Client
-	ctx    context.Context
+	Client  *mongo.Client
+	Context context.Context
 }
 
 func New(ctx context.Context, url string) (*Store, error) {
@@ -23,8 +23,8 @@ func New(ctx context.Context, url string) (*Store, error) {
 		return nil, err
 	}
 	store := &Store{
-		Client: client,
-		ctx:    ctx,
+		Client:  client,
+		Context: ctx,
 	}
 	return store, nil
 }

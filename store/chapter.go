@@ -23,10 +23,10 @@ func (store *Store) CreateChapter(manga model.Manga, chapter model.Chapter) (*mo
 
 	// store.ChapterCollection().UpdateOne()
 	var r model.Chapter
-	err := store.ChapterCollection().FindOne(store.ctx, filter).Decode(&r)
+	err := store.ChapterCollection().FindOne(store.Context, filter).Decode(&r)
 
 	if err != nil {
-		result, err := store.ChapterCollection().InsertOne(store.ctx, chapter)
+		result, err := store.ChapterCollection().InsertOne(store.Context, chapter)
 		return result, err
 	}
 

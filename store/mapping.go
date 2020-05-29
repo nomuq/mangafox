@@ -21,6 +21,6 @@ func (store *Store) CreateMapping(mapping model.Mapping) (*mongo.UpdateResult, e
 			{"source": mapping.Source},
 		},
 	}
-	result, err := store.MappingsCollection().UpdateOne(store.ctx, filter, bson.M{"$set": mapping}, opts)
+	result, err := store.MappingsCollection().UpdateOne(store.Context, filter, bson.M{"$set": mapping}, opts)
 	return result, err
 }

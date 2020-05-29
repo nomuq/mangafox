@@ -13,14 +13,14 @@ func (store *Store) MangaCollection() *mongo.Collection {
 }
 
 func (store *Store) CreateManga(manga model.Manga) (*mongo.InsertOneResult, error) {
-	result, err := store.MangaCollection().InsertOne(store.ctx, manga)
+	result, err := store.MangaCollection().InsertOne(store.Context, manga)
 	return result, err
 }
 
 func (store *Store) GetMangaByMALID(slug string) (model.Manga, error) {
 	var result model.Manga
 	filter := bson.D{primitive.E{Key: "links.mal", Value: slug}}
-	err := store.MangaCollection().FindOne(store.ctx, filter).Decode(&result)
+	err := store.MangaCollection().FindOne(store.Context, filter).Decode(&result)
 	return result, err
 }
 
@@ -41,12 +41,12 @@ func (store *Store) GetMangaByMALID(slug string) (model.Manga, error) {
 func (store *Store) GetAllManga() ([]model.Manga, error) {
 
 	var mangas []model.Manga
-	cursor, err := store.MangaCollection().Find(store.ctx, bson.M{})
+	cursor, err := store.MangaCollection().Find(store.Context, bson.M{})
 	if err != nil {
 		return nil, err
 	}
 
-	if err = cursor.All(store.ctx, &mangas); err != nil {
+	if err = cursor.All(store.Context, &mangas); err != nil {
 		return nil, err
 	}
 
