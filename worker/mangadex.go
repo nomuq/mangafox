@@ -6,6 +6,7 @@ import (
 	"mangafox/models"
 	"mangafox/source/anilist"
 	"mangafox/source/mangadex"
+	"mangafox/tasks"
 	"strconv"
 	"time"
 
@@ -41,10 +42,6 @@ func (worker Worker) IndexMangadexChapter(ctx context.Context, t *asynq.Task) er
 
 	// Check if chapter is already indexed
 	cacheKey := "mangadex" + ":" + mangaID + ":" + chapterID
-	// cacheValue, err := worker.cache.Get(cacheKey)
-	// if cacheValue == "true" {
-	// 	return nil
-	// }
 	mapping, err := worker.store.FindChapterMapping("mangadex", mangaID, chapterID)
 	if mapping.Indexed {
 		logrus.Infoln(cacheKey, "Already Indexed")
@@ -140,6 +137,7 @@ func (worker Worker) IndexMangadexChapter(ctx context.Context, t *asynq.Task) er
 		}
 
 		manga.ID = recordID
+		worker.EnqueueMangadexManga(mangaID)
 	}
 
 	if manga.ID == primitive.NilObjectID {
@@ -175,9 +173,7 @@ func (worker Worker) IndexMangadexChapter(ctx context.Context, t *asynq.Task) er
 		logrus.Errorln(err)
 		return nil
 	}
-	logrus.Infoln(cacheKey, result)
 
-	// worker.cache.Set(cacheKey, "true")
 	mappingRecord := models.Mapping{
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
@@ -189,5 +185,20 @@ func (worker Worker) IndexMangadexChapter(ctx context.Context, t *asynq.Task) er
 	}
 	worker.store.CreateMapping(mappingRecord)
 
+	logrus.Infoln(cacheKey, result)
+
 	return nil
+}
+
+func (worker Worker) EnqueueMangadexManga(id string) {
+	md := mangadex.Initilize()
+	m, err := md.GetInfo(id)
+	if err != nil {
+		logrus.Errorln(err)
+	}
+	for _, item := range m.Chapters {
+		payload := map[string]interface{}{"manga_id": id, "chapter_id": item.ID}
+		task := asynq.NewTask(string(tasks.IndexMangadexChapter), payload)
+		worker.client.Enqueue(task, asynq.Unique(time.Hour), asynq.MaxRetry(5))
+	}
 }

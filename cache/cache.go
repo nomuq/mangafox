@@ -32,7 +32,7 @@ func (cache Cache) Get(key string) (string, error) {
 }
 
 func (cache Cache) Set(key string, value interface{}) (string, error) {
-	result, err :=  cache.redis.Set(key, value, 0).Result()
+	result, err := cache.redis.Set(key, value, 0).Result()
 	return result, err
 }
 

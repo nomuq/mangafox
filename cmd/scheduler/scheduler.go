@@ -18,17 +18,6 @@ func main() {
 	if err != nil {
 		logrus.Panicln(err)
 	}
-
-	//md := mangadex.Initilize()
-	//m, err := md.GetInfo("5")
-	//if err != nil {
-	//	logrus.Panicln(err)
-	//}
-	//for _, item := range m.Chapters {
-	//	payload := map[string]interface{}{"manga_id": "5", "chapter_id": item.ID}
-	//	task := asynq.NewTask(string(tasks.IndexMangadexChapter), payload)
-	//	queue.Enqueue(task, asynq.Unique(time.Hour), asynq.MaxRetry(2))
-	//}
 }
 
 func Latest(token string, queue *asynq.Client) error {
@@ -54,6 +43,6 @@ func Latest(token string, queue *asynq.Client) error {
 func IndexChapter(manga string, chapter string, queue *asynq.Client) error {
 	payload := map[string]interface{}{"manga_id": manga, "chapter_id": chapter}
 	task := asynq.NewTask(string(tasks.IndexMangadexChapter), payload)
-	err := queue.Enqueue(task, asynq.Unique(time.Hour), asynq.MaxRetry(2))
+	err := queue.Enqueue(task, asynq.Unique(time.Hour), asynq.MaxRetry(0))
 	return err
 }

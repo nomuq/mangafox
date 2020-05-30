@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-	//defer profile.Start(profile.MemProfile).Stop()
 
 	store := store.Store{
 		URL:    "mongodb://localhost:27017",
@@ -28,18 +27,14 @@ func main() {
 		logrus.Panicln(err)
 	}
 
-	// cache := cache.Cache{
-	// 	Address:  "localhost:6379",
-	// 	Password: "",
-	// 	DB:       0,
-	// }
-
-	worker := worker.Initilize(store)
-
 	options := asynq.RedisClientOpt{Addr: "localhost:6379"}
 	server := asynq.NewServer(options, asynq.Config{
 		Concurrency: 1,
 	})
+
+	client := asynq.NewClient(options)
+
+	worker := worker.Initilize(store, server, client)
 
 	mux := asynq.NewServeMux()
 	mux.HandleFunc(tasks.IndexMangadexChapter, worker.IndexMangadexChapter)

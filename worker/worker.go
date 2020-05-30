@@ -1,18 +1,21 @@
 package worker
 
 import (
+	"github.com/hibiken/asynq"
 	"mangafox/store"
 )
 
 type Worker struct {
-	store store.Store
-	// cache cache.Cache
+	store  store.Store
+	server *asynq.Server
+	client *asynq.Client
 }
 
-func Initilize(store store.Store) Worker {
+func Initilize(store store.Store, server *asynq.Server, client *asynq.Client) Worker {
 	worker := Worker{
-		store: store,
-		// cache: cache,
+		store:  store,
+		server: server,
+		client: client,
 	}
 	return worker
 }

@@ -16,3 +16,7 @@
 
 build/
 .idea/
+
+mangafox-scheduler
+mangafox-server
+mangafox-worker
