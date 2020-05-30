@@ -1,36 +1,51 @@
 package main
 
 import (
-	"context"
-	"mangafox/service"
-	"mangafox/store"
-	"mangafox/tasks"
-
 	"github.com/hibiken/asynq"
 	"github.com/sirupsen/logrus"
+	"mangafox/cache"
+	"mangafox/store"
+	"mangafox/tasks"
+	"mangafox/worker"
 )
 
 func main() {
+	//defer profile.Start(profile.MemProfile).Stop()
 
-	ctx := context.Background()
-	store, err := store.New(ctx, "mongodb://localhost:27017")
+	store := store.Store{
+		URL:    "mongodb://localhost:27017",
+		DBName: "mangafox",
+	}
+	// defer client.Disconnect(ctx)
+
+	err := store.Connect()
 	if err != nil {
-		logrus.Fatalln(err)
+		logrus.Panicln(err)
 	}
 
-	service := service.Service{
-		Store: store,
+	err = store.Ping()
+	if err != nil {
+		logrus.Panicln(err)
 	}
+
+	cache := cache.Cache{
+		Address:  "localhost:6379",
+		Password: "",
+		DB:       0,
+	}
+
+	worker := worker.Initilize(store, cache)
 
 	options := asynq.RedisClientOpt{Addr: "localhost:6379"}
 	server := asynq.NewServer(options, asynq.Config{
-		Concurrency: 2,
+		Concurrency: 1,
 	})
 
 	mux := asynq.NewServeMux()
-	mux.HandleFunc(string(tasks.IndexMangadexChapter), service.IndexMangadexChapter)
+	mux.HandleFunc(tasks.IndexMangadexChapter, worker.IndexMangadexChapter)
 
 	if err := server.Run(mux); err != nil {
 		logrus.Fatalln(err)
 	}
+
 }

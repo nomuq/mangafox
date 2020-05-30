@@ -1,24 +1,16 @@
 package api
 
 import (
+	"github.com/labstack/echo"
 	"mangafox/api/manga"
-	"mangafox/store"
-
-	"github.com/labstack/echo/v4"
 )
 
-type Router struct {
-	Store *store.Store
-}
+type Router struct{}
 
-func (router *Router) Routes(e *echo.Echo) {
-
+func (router Router) Routes(e *echo.Echo) {
 	api := e.Group("/api")
 
-	manga := &manga.MangaRouter{
-		Store: router.Store,
-	}
-
-	manga.Routes(api)
-
+	manga := manga.Handler{}
+	api.GET("/manga", manga.FindAll)
+	api.GET("/manga/:id", manga.FindByID)
 }

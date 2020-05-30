@@ -2,29 +2,40 @@ package store
 
 import (
 	"context"
-
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
+	"time"
 )
 
 type Store struct {
-	Client  *mongo.Client
-	Context context.Context
+	URL     string
+	DBName  string
+	client  *mongo.Client
+	db      *mongo.Database
+	context context.Context
 }
 
-func New(ctx context.Context, url string) (*Store, error) {
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(url))
+func (store *Store) Connect() error {
+	globalContext := context.Background()
+
+	ctx, cancel := context.WithTimeout(globalContext, 10*time.Second)
+	defer cancel()
+
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(store.URL))
 	if err != nil {
-		return nil, err
+		return err
 	}
-	err = client.Ping(ctx, readpref.Primary())
-	if err != nil {
-		return nil, err
-	}
-	store := &Store{
-		Client:  client,
-		Context: ctx,
-	}
-	return store, nil
+
+	store.context = globalContext
+	store.client = client
+	store.db = client.Database(store.DBName)
+	return nil
+}
+
+func (store *Store) Ping() error {
+	ctx, cancel := context.WithTimeout(store.context, 10*time.Second)
+	defer cancel()
+	err := store.client.Ping(ctx, readpref.Primary())
+	return err
 }

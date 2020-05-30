@@ -1,34 +1,26 @@
 package store
 
 import (
-	"mangafox/model"
-
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
+	"context"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"mangafox/models"
+	"time"
 )
 
-func (store *Store) ChapterCollection() *mongo.Collection {
-	return store.Client.Database("mangafox").Collection("chapter")
-}
+const ChapterCollection = "chapter"
 
-func (store *Store) CreateChapter(manga model.Manga, chapter model.Chapter) (*mongo.InsertOneResult, error) {
-	filter := bson.M{
-		"$and": []bson.M{
-			bson.M{"language": "en"},
-			bson.M{"manga": manga.ID},
-			bson.M{"source": chapter.Source},
-			bson.M{"number": chapter.Number},
-		},
-	}
+func (store Store) CreateChapter(chapter models.Chapter) (primitive.ObjectID, error) {
+	ctx, cancel := context.WithTimeout(store.context, 30*time.Second)
+	defer cancel()
 
-	// store.ChapterCollection().UpdateOne()
-	var r model.Chapter
-	err := store.ChapterCollection().FindOne(store.Context, filter).Decode(&r)
-
+	result, err := store.db.Collection(ChapterCollection).InsertOne(ctx, chapter)
 	if err != nil {
-		result, err := store.ChapterCollection().InsertOne(store.Context, chapter)
-		return result, err
+		return primitive.NewObjectID(), err
 	}
 
-	return nil, err
+	if objectID, ok := result.InsertedID.(primitive.ObjectID); ok {
+		return objectID, err
+	}
+
+	return primitive.NewObjectID(), err
 }

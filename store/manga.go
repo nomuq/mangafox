@@ -1,54 +1,47 @@
 package store
 
 import (
-	"mangafox/model"
-
+	"context"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
+	"mangafox/models"
+	"time"
 )
 
-func (store *Store) MangaCollection() *mongo.Collection {
-	return store.Client.Database("mangafox").Collection("manga")
-}
+const MangaCollection = "manga"
 
-func (store *Store) CreateManga(manga model.Manga) (*mongo.InsertOneResult, error) {
-	result, err := store.MangaCollection().InsertOne(store.Context, manga)
-	return result, err
-}
+func (store Store) CreateManga(manga models.Manga) (primitive.ObjectID, error) {
+	ctx, cancel := context.WithTimeout(store.context, 30*time.Second)
+	defer cancel()
 
-func (store *Store) GetMangaByMALID(slug string) (model.Manga, error) {
-	var result model.Manga
-	filter := bson.D{primitive.E{Key: "links.mal", Value: slug}}
-	err := store.MangaCollection().FindOne(store.Context, filter).Decode(&result)
-	return result, err
-}
-
-// func (store *Store) MangaIndexes() {
-// 	cursor, err := store.MangaCollection().Indexes().List(store.ctx)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		return
-// 	}
-
-// 	for cursor.Next(store.ctx) {
-// 		index := bson.D{}
-// 		cursor.Decode(&index)
-// 		fmt.Println(fmt.Sprintf("index found %v", index))
-// 	}
-// }
-
-func (store *Store) GetAllManga() ([]model.Manga, error) {
-
-	var mangas []model.Manga
-	cursor, err := store.MangaCollection().Find(store.Context, bson.M{})
+	result, err := store.db.Collection(MangaCollection).InsertOne(ctx, manga)
 	if err != nil {
-		return nil, err
+		return primitive.NewObjectID(), err
 	}
 
-	if err = cursor.All(store.Context, &mangas); err != nil {
-		return nil, err
+	if objectID, ok := result.InsertedID.(primitive.ObjectID); ok {
+		return objectID, err
 	}
 
-	return mangas, nil
+	return primitive.NewObjectID(), err
+}
+
+func (store Store) FindManga(id primitive.ObjectID) (models.Manga, error) {
+	ctx, cancel := context.WithTimeout(store.context, 30*time.Second)
+	defer cancel()
+
+	var result models.Manga
+	filter := bson.D{primitive.E{Key: "_id", Value: id}}
+	err := store.db.Collection(MangaCollection).FindOne(ctx, filter).Decode(&result)
+	return result, err
+}
+
+func (store Store) GetMangaByMangadexID(id string) (models.Manga, error) {
+	ctx, cancel := context.WithTimeout(store.context, 30*time.Second)
+	defer cancel()
+
+	var result models.Manga
+	filter := bson.D{primitive.E{Key: "links.mangadex", Value: id}}
+	err := store.db.Collection(MangaCollection).FindOne(ctx, filter).Decode(&result)
+	return result, err
 }

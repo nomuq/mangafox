@@ -1,4 +1,4 @@
-package model
+package models
 
 import (
 	"time"
@@ -25,6 +25,8 @@ type Manga struct {
 	Cover          Cover              `json:"cover" bson:"cover"`
 	Chapters       []Chapter          `json:"chapters" bson:"-"`
 	Country        *string            `json:"country" bson:"country"`
+	Author         string             `json:"author" bson:"author"`
+	Artist         string             `json:"artist" bson:"artist"`
 }
 
 type Links struct {
@@ -36,6 +38,7 @@ type Links struct {
 }
 
 type Cover struct {
+	Default    string  `json:"default"`
 	ExtraLarge *string `json:"extraLarge"`
 	Large      *string `json:"large"`
 	Medium     *string `json:"medium"`
@@ -49,7 +52,7 @@ type Date struct {
 }
 
 type AlternateTitle struct {
-	Romaji  *string `json:"romaji"`
-	English *string `json:"english"`
-	Native  *string `json:"native"`
+	Romaji  string `json:"romaji"`
+	English string `json:"english"`
+	Native  string `json:"native"`
 }
