@@ -41,10 +41,15 @@ func (worker Worker) IndexMangadexChapter(ctx context.Context, t *asynq.Task) er
 
 	// Check if chapter is already indexed
 	cacheKey := "mangadex" + ":" + mangaID + ":" + chapterID
-	//isChapterIndexed, err := worker.cache.GetBool(cacheKey)
-	//if isChapterIndexed {
-	//	return nil
-	//}
+	// cacheValue, err := worker.cache.Get(cacheKey)
+	// if cacheValue == "true" {
+	// 	return nil
+	// }
+	mapping, err := worker.store.FindChapterMapping("mangadex", mangaID, chapterID)
+	if mapping.Indexed {
+		logrus.Infoln(cacheKey, "Already Indexed")
+		return nil
+	}
 
 	md := mangadex.Initilize()
 	manga, err := worker.store.GetMangaByMangadexID(mangaID)
@@ -128,17 +133,6 @@ func (worker Worker) IndexMangadexChapter(ctx context.Context, t *asynq.Task) er
 			Country: anilistResult.CountryOfOrigin,
 		}
 
-		//if mangadexManga.Links.Mal != "" {
-		//	malID, err := strconv.ParseInt(mangadexManga.Links.Mal, 0, 64)
-		//	if err == nil {
-		//		malManga, err := mal.GetManga(malID)
-		//		if err == nil {
-		//			manga.Type = malManga.Type
-		//			manga.IsPublishing = malManga.Publishing
-		//		}
-		//	}
-		//}
-
 		recordID, err := worker.store.CreateManga(record)
 		if err != nil {
 			logrus.Errorln(err)
@@ -183,7 +177,17 @@ func (worker Worker) IndexMangadexChapter(ctx context.Context, t *asynq.Task) er
 	}
 	logrus.Infoln(cacheKey, result)
 
-	//worker.cache.SetBool(cacheKey, true)
+	// worker.cache.Set(cacheKey, "true")
+	mappingRecord := models.Mapping{
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+		Chapter:   chapterID,
+		Manga:     mangaID,
+		Source:    "mangadex",
+		Language:  chapter.Language,
+		Indexed:   true,
+	}
+	worker.store.CreateMapping(mappingRecord)
 
 	return nil
 }

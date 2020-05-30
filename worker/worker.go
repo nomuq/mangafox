@@ -1,19 +1,18 @@
 package worker
 
 import (
-	"mangafox/cache"
 	"mangafox/store"
 )
 
 type Worker struct {
 	store store.Store
-	cache cache.Cache
+	// cache cache.Cache
 }
 
-func Initilize(store store.Store, cache cache.Cache) Worker {
+func Initilize(store store.Store) Worker {
 	worker := Worker{
 		store: store,
-		cache: cache,
+		// cache: cache,
 	}
 	return worker
 }

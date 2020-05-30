@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/hibiken/asynq"
-	"github.com/sirupsen/logrus"
-	"mangafox/cache"
 	"mangafox/store"
 	"mangafox/tasks"
 	"mangafox/worker"
+
+	"github.com/hibiken/asynq"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -28,13 +28,13 @@ func main() {
 		logrus.Panicln(err)
 	}
 
-	cache := cache.Cache{
-		Address:  "localhost:6379",
-		Password: "",
-		DB:       0,
-	}
+	// cache := cache.Cache{
+	// 	Address:  "localhost:6379",
+	// 	Password: "",
+	// 	DB:       0,
+	// }
 
-	worker := worker.Initilize(store, cache)
+	worker := worker.Initilize(store)
 
 	options := asynq.RedisClientOpt{Addr: "localhost:6379"}
 	server := asynq.NewServer(options, asynq.Config{

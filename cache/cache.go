@@ -27,11 +27,13 @@ func (cache *Cache) Connect() error {
 }
 
 func (cache Cache) Get(key string) (string, error) {
-	return cache.redis.Get(key).Result()
+	result, err := cache.redis.Get(key).Result()
+	return result, err
 }
 
 func (cache Cache) Set(key string, value interface{}) (string, error) {
-	return cache.redis.Set(key, value, 0).Result()
+	result, err :=  cache.redis.Set(key, value, 0).Result()
+	return result, err
 }
 
 func (cache Cache) GetBool(key string) (bool, error) {

@@ -9,13 +9,13 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-const ChapterCollection = "chapter"
+const MappingCollection = "mapping"
 
-func (store Store) CreateChapter(chapter models.Chapter) (primitive.ObjectID, error) {
+func (store Store) CreateMapping(mapping models.Mapping) (primitive.ObjectID, error) {
 	ctx, cancel := context.WithTimeout(store.context, 30*time.Second)
 	defer cancel()
 
-	result, err := store.db.Collection(ChapterCollection).InsertOne(ctx, chapter)
+	result, err := store.db.Collection(MappingCollection).InsertOne(ctx, mapping)
 	if err != nil {
 		return primitive.NewObjectID(), err
 	}
@@ -27,16 +27,16 @@ func (store Store) CreateChapter(chapter models.Chapter) (primitive.ObjectID, er
 	return primitive.NewObjectID(), err
 }
 
-func (store Store) FindChapterBySourceAndNumber(source string, number float64, language string) (models.Chapter, error) {
+func (store Store) FindChapterMapping(source string, manga string, chapter string) (models.Mapping, error) {
 	ctx, cancel := context.WithTimeout(store.context, 30*time.Second)
 	defer cancel()
 
-	var result models.Chapter
+	var result models.Mapping
 	filter := bson.M{
-		"source":   source,
-		"number":   number,
-		"language": language,
+		"source":  source,
+		"manga":   manga,
+		"chapter": chapter,
 	}
-	err := store.db.Collection(ChapterCollection).FindOne(ctx, filter).Decode(&result)
+	err := store.db.Collection(MappingCollection).FindOne(ctx, filter).Decode(&result)
 	return result, err
 }
