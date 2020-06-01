@@ -5,7 +5,7 @@ go 1.13
 require (
 	github.com/aerogo/http v1.1.3
 	github.com/akyoto/assert v0.2.4
-	github.com/go-redis/redis/v7 v7.2.0
+	github.com/go-redis/redis/v7 v7.3.0
 	github.com/hibiken/asynq v0.9.1
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/gommon v0.3.0 // indirect
