@@ -1,9 +1,10 @@
 package cache
 
 import (
-	"github.com/akyoto/assert"
 	"strconv"
 	"testing"
+
+	"github.com/akyoto/assert"
 )
 
 func TestCache_GetBool(t *testing.T) {

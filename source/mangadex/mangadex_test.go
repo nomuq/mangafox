@@ -1,8 +1,9 @@
 package mangadex
 
 import (
-	"github.com/akyoto/assert"
 	"testing"
+
+	"github.com/akyoto/assert"
 )
 
 func TestMangadex_GetInfo(t *testing.T) {

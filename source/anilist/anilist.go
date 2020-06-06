@@ -2,8 +2,9 @@ package anilist
 
 import (
 	"fmt"
-	"github.com/aerogo/http/client"
 	"net/http"
+
+	"github.com/aerogo/http/client"
 )
 
 var headers = client.Headers{

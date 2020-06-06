@@ -1,8 +1,9 @@
 package mal
 
 import (
-	"github.com/akyoto/assert"
 	"testing"
+
+	"github.com/akyoto/assert"
 )
 
 func TestGetManga(t *testing.T) {

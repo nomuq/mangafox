@@ -1,8 +1,9 @@
 package api
 
 import (
-	"github.com/labstack/echo"
 	"mangafox/api/manga"
+
+	"github.com/labstack/echo"
 )
 
 type Router struct{}

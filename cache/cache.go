@@ -1,8 +1,9 @@
 package cache
 
 import (
-	"github.com/go-redis/redis/v7"
 	"strconv"
+
+	"github.com/go-redis/redis/v7"
 )
 
 type Cache struct {
