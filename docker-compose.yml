@@ -43,7 +43,7 @@ services:
     environment:
       - MONGO_URI=mongodb://mongo
       - REDIS_URI=redis:6379
-      - SEARCH_URI=meilisearch:7700
+      - SEARCH_URI=http://meilisearch:7700
     depends_on:
       - mongo
       - redis
