@@ -15,6 +15,7 @@ import (
 func main() {
 	mongoURL := os.Getenv("MONGO_URI")
 	redisURL := os.Getenv("REDIS_URI")
+	searchURL := os.Getenv("SEARCH_URI")
 
 	if mongoURL == "" {
 		logrus.Fatalln(fmt.Errorf("mongodb url not found"))
@@ -22,6 +23,10 @@ func main() {
 
 	if redisURL == "" {
 		logrus.Fatalln(fmt.Errorf("redis url not found"))
+	}
+
+	if searchURL == "" {
+		logrus.Fatalln(fmt.Errorf("meilisearch url not found"))
 	}
 
 	store := store.Store{
@@ -48,7 +53,7 @@ func main() {
 	client := asynq.NewClient(options)
 
 	search := search.Search{
-		URL: "http://127.0.0.1:7700",
+		URL: searchURL,
 	}
 
 	search.Initilize()
