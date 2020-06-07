@@ -15,12 +15,9 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o mangadex-worker ./cmd/worker
+RUN go build -o mangafox-worker ./cmd/worker
 
 FROM alpine
-
-ARG MONGO_URI
-ARG REDIS_URI
 
 WORKDIR /mangafox
 

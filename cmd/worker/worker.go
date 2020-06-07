@@ -1,18 +1,30 @@
 package main
 
 import (
+	"fmt"
 	"mangafox/store"
 	"mangafox/tasks"
 	"mangafox/worker"
+	"os"
 
 	"github.com/hibiken/asynq"
 	"github.com/sirupsen/logrus"
 )
 
 func main() {
+	mongoURL := os.Getenv("MONGO_URI")
+	redisURL := os.Getenv("REDIS_URI")
+
+	if mongoURL == "" {
+		logrus.Fatalln(fmt.Errorf("mongodb url not found"))
+	}
+
+	if redisURL == "" {
+		logrus.Fatalln(fmt.Errorf("redis url not found"))
+	}
 
 	store := store.Store{
-		URL:    "mongodb://localhost:27017",
+		URL:    mongoURL,
 		DBName: "mangafox",
 	}
 	// defer client.Disconnect(ctx)
@@ -27,7 +39,7 @@ func main() {
 		logrus.Panicln(err)
 	}
 
-	options := asynq.RedisClientOpt{Addr: "localhost:6379"}
+	options := asynq.RedisClientOpt{Addr: redisURL}
 	server := asynq.NewServer(options, asynq.Config{
 		Concurrency: 1,
 	})

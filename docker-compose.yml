@@ -1,0 +1,58 @@
+version: "3.2"
+
+services:
+  mongo:
+    image: mongo
+    restart: always
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: mangafox
+    #   MONGO_INITDB_ROOT_PASSWORD: mangafox
+    ports:
+      - "8000:27017"
+    networks:
+      - mangafox
+    volumes:
+      - mangafox:/var/lib/mongo
+
+  redis:
+    image: "redis:alpine"
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - mangafox
+
+  worker:
+    build:
+      context: .
+      dockerfile: worker.Dockerfile
+    networks:
+      - mangafox
+    environment:
+      - MONGO_URI=mongodb://mongo
+      - REDIS_URI=redis:6379
+    depends_on:
+      - mongo
+      - redis
+    restart: always
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: scheduler.Dockerfile
+    networks:
+      - mangafox
+    environment:
+      - REDIS_URI=redis:6379
+    depends_on:
+      - mongo
+      - redis
+    ports:
+      - "8081:8081"
+    # restart: always
+
+networks:
+  mangafox:
+
+volumes:
+  mangafox:

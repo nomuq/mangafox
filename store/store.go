@@ -2,8 +2,9 @@ package store
 
 import (
 	"context"
-	"go.mongodb.org/mongo-driver/bson"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -21,7 +22,7 @@ type Store struct {
 func (store *Store) Connect() error {
 	globalContext := context.Background()
 
-	ctx, cancel := context.WithTimeout(globalContext, 10*time.Second)
+	ctx, cancel := context.WithTimeout(globalContext, 30*time.Second)
 	defer cancel()
 
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(store.URL))
@@ -36,9 +37,9 @@ func (store *Store) Connect() error {
 }
 
 func (store *Store) Ping() error {
-	ctx, cancel := context.WithTimeout(store.context, 10*time.Second)
-	defer cancel()
-	err := store.client.Ping(ctx, readpref.Primary())
+	// ctx, cancel := context.WithTimeout(store.context, 10*time.Second)
+	// defer cancel()
+	err := store.client.Ping(store.context, readpref.Primary())
 	return err
 }
 

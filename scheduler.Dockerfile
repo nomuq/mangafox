@@ -15,14 +15,14 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o mangadex-scheduler ./cmd/scheduler
+RUN go build -o mangafox-scheduler ./cmd/scheduler
 
 FROM alpine
-
-ARG REDIS_URI
 
 WORKDIR /mangafox
 
 COPY --from=builder /mangafox/mangafox-scheduler /mangafox/mangafox-scheduler 
+
+EXPOSE 8080
 
 ENTRYPOINT [ "/mangafox/mangafox-scheduler" ]
