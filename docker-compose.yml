@@ -34,34 +34,34 @@ services:
     networks:
       - mangafox
 
-  # worker:
-  #   build:
-  #     context: .
-  #     dockerfile: worker.Dockerfile
-  #   networks:
-  #     - mangafox
-  #   environment:
-  #     - MONGO_URI=mongodb://mongo
-  #     - REDIS_URI=redis:6379
-  #     - SEARCH_URI=meilisearch:7700
-  #   depends_on:
-  #     - mongo
-  #     - redis
-  #   restart: always
+  worker:
+    build:
+      context: .
+      dockerfile: worker.Dockerfile
+    networks:
+      - mangafox
+    environment:
+      - MONGO_URI=mongodb://mongo
+      - REDIS_URI=redis:6379
+      - SEARCH_URI=meilisearch:7700
+    depends_on:
+      - mongo
+      - redis
+    restart: always
 
-  # scheduler:
-  #   build:
-  #     context: .
-  #     dockerfile: scheduler.Dockerfile
-  #   networks:
-  #     - mangafox
-  #   environment:
-  #     - REDIS_URI=redis:6379
-  #   depends_on:
-  #     - mongo
-  #     - redis
-  #   ports:
-  #     - "8081:8081"
+  scheduler:
+    build:
+      context: .
+      dockerfile: scheduler.Dockerfile
+    networks:
+      - mangafox
+    environment:
+      - REDIS_URI=redis:6379
+    depends_on:
+      - mongo
+      - redis
+    ports:
+      - "8081:8081"
 
 networks:
   mangafox:
