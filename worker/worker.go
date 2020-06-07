@@ -1,8 +1,9 @@
 package worker
 
 import (
-	"github.com/hibiken/asynq"
 	"mangafox/store"
+
+	"github.com/hibiken/asynq"
 )
 
 type Worker struct {
