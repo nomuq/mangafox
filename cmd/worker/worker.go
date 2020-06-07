@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"mangafox/search"
 	"mangafox/store"
 	"mangafox/tasks"
 	"mangafox/worker"
@@ -46,10 +47,21 @@ func main() {
 
 	client := asynq.NewClient(options)
 
-	worker := worker.Initilize(store, server, client)
+	search := search.Search{
+		URL: "http://127.0.0.1:7700",
+	}
+
+	search.Initilize()
+	err = search.CreateIndexes()
+	if err != nil {
+		logrus.Panicln(err)
+	}
+
+	worker := worker.Initilize(store, search, server, client)
 
 	mux := asynq.NewServeMux()
 	mux.HandleFunc(tasks.IndexMangadexChapter, worker.IndexMangadexChapter)
+	mux.HandleFunc(tasks.UpdateSearchIndexes, worker.UpdateSearchIndexes)
 
 	if err := server.Run(mux); err != nil {
 		logrus.Fatalln(err)

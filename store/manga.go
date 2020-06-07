@@ -46,3 +46,20 @@ func (store Store) GetMangaByMangadexID(id string) (models.Manga, error) {
 	err := store.db.Collection(MangaCollection).FindOne(ctx, filter).Decode(&result)
 	return result, err
 }
+
+func (store Store) GetAllManga() ([]models.Manga, error) {
+	ctx, cancel := context.WithTimeout(store.context, 300*time.Second)
+	defer cancel()
+
+	var mangas []models.Manga
+	cursor, err := store.db.Collection(MangaCollection).Find(ctx, bson.M{})
+	if err != nil {
+		return nil, err
+	}
+
+	if err = cursor.All(ctx, &mangas); err != nil {
+		return nil, err
+	}
+
+	return mangas, nil
+}

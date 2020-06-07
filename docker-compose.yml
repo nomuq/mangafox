@@ -13,6 +13,7 @@ services:
       - mangafox
     volumes:
       - mangafox:/var/lib/mongo
+      - mongodb_data_container:/data/db
 
   redis:
     image: "redis:alpine"
@@ -56,3 +57,4 @@ networks:
 
 volumes:
   mangafox:
+  mongodb_data_container:

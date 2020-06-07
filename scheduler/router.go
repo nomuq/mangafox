@@ -3,9 +3,11 @@ package scheduler
 import (
 	"crypto/subtle"
 	"mangafox/source/mangadex"
+	"mangafox/tasks"
 	"net/http"
 	"path"
 	"strconv"
+	"time"
 
 	"github.com/hibiken/asynq"
 	"github.com/labstack/echo"
@@ -31,6 +33,7 @@ func (router Router) Routes(e *echo.Echo) {
 
 	api.POST("/manga", router.HandleMangadexMangaSync)
 	api.POST("/latest", router.HandleMangadexLatestSync)
+	api.POST("/search", router.HandleUpdateSearchIndex)
 }
 
 func (router Router) HandleMangadexMangaSync(c echo.Context) error {
@@ -90,4 +93,14 @@ func (router Router) HandleMangadexLatestSync(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, items)
+}
+
+func (router Router) HandleUpdateSearchIndex(c echo.Context) error {
+	task := asynq.NewTask(string(tasks.UpdateSearchIndexes), map[string]interface{}{"type": "manga"})
+	err := router.queue.Enqueue(task, asynq.Unique(time.Hour), asynq.MaxRetry(0))
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, task)
 }

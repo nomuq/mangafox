@@ -4,7 +4,6 @@ import (
 	"mangafox/source/mangadex"
 	"mangafox/tasks"
 	"path"
-	"time"
 
 	"github.com/hibiken/asynq"
 	"github.com/sirupsen/logrus"
@@ -33,6 +32,6 @@ func Latest(token string, queue *asynq.Client) error {
 func IndexChapter(manga string, chapter string, queue *asynq.Client) error {
 	payload := map[string]interface{}{"manga_id": manga, "chapter_id": chapter}
 	task := asynq.NewTask(string(tasks.IndexMangadexChapter), payload)
-	err := queue.Enqueue(task, asynq.Unique(time.Hour), asynq.MaxRetry(0))
+	err := queue.Enqueue(task)
 	return err
 }
