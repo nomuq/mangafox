@@ -92,6 +92,8 @@ github.com/mattn/go-isatty v0.0.9 h1:d5US/mDsogSGW37IV293h//ZFaeajb69h+EHFsv2xGg
 github.com/mattn/go-isatty v0.0.9/go.mod h1:YNRxwqDuOph6SZLI9vUUz6OYw3QyUt7WiY2yME+cCiQ=
 github.com/meilisearch/meilisearch-go v0.9.1 h1:aDiKCvHsMvZ829s9VPU1r2juPB5sLFaV8eTLClvO1fU=
 github.com/meilisearch/meilisearch-go v0.9.1/go.mod h1:aqiJBd7zGUPzN2mnd0ZjVm//CfzeHCKSaYpqVNgujlE=
+github.com/meilisearch/meilisearch-go v0.12.0 h1:5H7i2GLPvrMuZ7nlvVi6EHTp+n7JUObFo/J+/3YDU2A=
+github.com/meilisearch/meilisearch-go v0.12.0/go.mod h1:aqiJBd7zGUPzN2mnd0ZjVm//CfzeHCKSaYpqVNgujlE=
 github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe/go.mod h1:wL8QJuTMNUDYhXwkmfOly8iTdp5TEcJFWZD2D7SIkUc=
 github.com/nokusukun/jikan2go v0.2.2 h1:O57YDAvniiTBrcGq5DMGnqrsEYdDqbL0pHDr0qseV9Q=
 github.com/nokusukun/jikan2go v0.2.2/go.mod h1:zkeur3pUNQ7f0LEqapj7z8uiQwjyNDOFbWk0Cj2KiFs=
