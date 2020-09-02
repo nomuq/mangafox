@@ -10,7 +10,7 @@ require (
 	github.com/hibiken/asynq v0.9.2
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/gommon v0.3.0 // indirect
-	github.com/meilisearch/meilisearch-go v0.9.1
+	github.com/meilisearch/meilisearch-go v0.12.1
 	github.com/nokusukun/jikan2go v0.2.2
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sirupsen/logrus v1.6.0
