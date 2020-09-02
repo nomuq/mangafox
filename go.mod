@@ -15,6 +15,6 @@ require (
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sirupsen/logrus v1.6.0
 	github.com/stretchr/testify v1.6.1
-	go.mongodb.org/mongo-driver v1.3.4
+	go.mongodb.org/mongo-driver v1.4.1
 	golang.org/x/crypto v0.0.0-20200510223506-06a226fb4e37 // indirect
 )
